@@ -3,1554 +3,345 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="An interactive fan-made Hearts of Iron IV website.">
-<title>HOI4 — The World at War</title>
+<meta name="description" content="HOI4 Command Center - an unofficial Hearts of Iron IV fan website.">
+<title>HOI4 // COMMAND CENTER</title>
 
 <style>
-:root {
-    --bg: #0b0d0c;
-    --panel: #151917;
-    --panel2: #1c211e;
-    --gold: #c6a15b;
-    --gold2: #e0bd76;
-    --red: #9e3f35;
-    --red2: #d05b4c;
-    --green: #657d54;
-    --text: #e5e0d3;
-    --muted: #9b9b91;
-    --border: #3a3d35;
-    --shadow: rgba(0,0,0,.55);
-}
+/* =========================================================
+   HOI4 COMMAND CENTER
+   Everything is contained in this one HTML file.
+   ========================================================= */
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: Georgia, "Times New Roman", serif;
-    background:
-        radial-gradient(circle at 50% 0%, #252820 0%, transparent 35%),
-        linear-gradient(135deg, #080a09, #121512 50%, #090b0a);
-    color: var(--text);
-    line-height: 1.6;
-}
-
-/* NAVIGATION */
-
-nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background: rgba(10,12,11,.94);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(8px);
-}
-
-.nav-inner {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
-}
-
-.logo {
-    color: var(--gold2);
-    font-size: 21px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 8px;
-}
-
-nav a {
-    color: var(--muted);
-    text-decoration: none;
-    padding: 8px 12px;
-    transition: .2s;
-    border-bottom: 2px solid transparent;
-}
-
-nav a:hover {
-    color: var(--gold2);
-    border-bottom-color: var(--gold);
-}
-
-/* HERO */
-
-.hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 110px 20px 60px;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.82)),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 80px,
-            rgba(255,255,255,.025) 81px
-        );
-    pointer-events: none;
-}
-
-.hero-content {
-    position: relative;
-    max-width: 900px;
-}
-
-.eyebrow {
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    font-size: 13px;
-}
-
-.hero h1 {
-    font-size: clamp(50px, 9vw, 100px);
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    color: #ded7c6;
-    text-shadow: 4px 5px 0 #080909, 0 0 30px #000;
-    margin: 10px 0;
-}
-
-.hero h1 span {
-    color: var(--gold2);
-}
-
-.hero p {
-    max-width: 700px;
-    margin: auto;
-    color: #bbb8ae;
-    font-size: 19px;
-}
-
-.buttons {
-    margin-top: 30px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn {
-    border: 1px solid var(--gold);
-    color: var(--gold2);
-    background: rgba(0,0,0,.4);
-    padding: 12px 22px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: bold;
-    transition: .2s;
-}
-
-.btn:hover {
-    background: var(--gold);
-    color: #15130f;
-    transform: translateY(-2px);
-}
-
-.btn.red {
-    border-color: var(--red2);
-    color: #efaa9f;
-}
-
-.btn.red:hover {
-    background: var(--red);
-    color: white;
-}
-
-/* GENERAL */
-
-section {
-    padding: 85px 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.section-title {
-    text-align: center;
-    margin-bottom: 45px;
-}
-
-.section-title h2 {
-    color: var(--gold2);
-    font-size: 35px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-}
-
-.section-title p {
-    color: var(--muted);
-    margin-top: 5px;
-}
-
-.divider {
-    width: 80px;
-    height: 3px;
-    background: var(--gold);
-    margin: 15px auto;
-}
-
-/* ABOUT */
-
-.about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-}
-
-.panel {
-    background: linear-gradient(145deg, var(--panel2), var(--panel));
-    border: 1px solid var(--border);
-    box-shadow: 0 15px 35px var(--shadow);
-    padding: 28px;
-}
-
-.panel h3 {
-    color: var(--gold2);
-    margin-bottom: 10px;
-}
-
-/* STATS */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.stat {
-    background: #111411;
-    border: 1px solid var(--border);
-    text-align: center;
-    padding: 22px 10px;
-}
-
-.stat-number {
-    font-size: 31px;
-    color: var(--gold2);
-    font-weight: bold;
-}
-
-.stat-label {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-/* COUNTRIES */
-
-.country-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.country {
-    min-height: 210px;
-    padding: 25px;
-    border: 1px solid var(--border);
-    background: linear-gradient(150deg, #20251f, #111411);
-    cursor: pointer;
-    transition: .25s;
-    position: relative;
-    overflow: hidden;
-}
-
-.country:hover {
-    transform: translateY(-5px);
-    border-color: var(--gold);
-}
-
-.country::after {
-    content: "✦";
-    position: absolute;
-    right: 15px;
-    bottom: -15px;
-    font-size: 100px;
-    color: rgba(198,161,91,.06);
-}
-
-.flag {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.country h3 {
-    color: var(--gold2);
-    font-size: 23px;
-}
-
-.country p {
-    color: var(--muted);
-}
-
-/* SYSTEMS */
-
-.system-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.system {
-    border: 1px solid var(--border);
-    background: var(--panel);
-}
-
-.system-header {
-    padding: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    color: var(--gold2);
-    font-weight: bold;
-}
-
-.system-header:hover {
-    background: #20251f;
-}
-
-.system-body {
-    display: none;
-    padding: 0 20px 20px;
-    color: var(--muted);
-}
-
-.system.open .system-body {
-    display: block;
-}
-
-/* TIMELINE */
-
-.timeline {
-    position: relative;
-    max-width: 850px;
-    margin: auto;
-}
-
-.timeline::before {
-    content: "";
-    position: absolute;
-    width: 3px;
-    background: var(--gold);
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.event {
-    width: 50%;
-    padding: 15px 35px;
-    position: relative;
-}
-
-.event:nth-child(odd) {
-    left: 0;
-    text-align: right;
-}
-
-.event:nth-child(even) {
-    left: 50%;
-}
-
-.event-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    padding: 20px;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.event-card:hover {
-    border-color: var(--gold);
-    background: #1c211e;
-}
-
-.year {
-    color: var(--gold2);
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.event-dot {
-    position: absolute;
-    top: 28px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: var(--red2);
-    border: 3px solid #0b0d0c;
-}
-
-.event:nth-child(odd) .event-dot {
-    right: -8px;
-}
-
-.event:nth-child(even) .event-dot {
-    left: -8px;
-}
-
-/* GLOSSARY */
-
-.search {
-    width: 100%;
-    padding: 15px;
-    background: #0c0e0d;
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-
-.glossary {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.term {
-    padding: 17px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-}
-
-.term strong {
-    color: var(--gold2);
-}
-
-/* QUIZ */
-
-.quiz-box {
-    max-width: 700px;
-    margin: auto;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    padding: 30px;
-    text-align: center;
-}
-
-.question {
-    font-size: 23px;
-    color: var(--gold2);
-    margin-bottom: 25px;
-}
-
-.answers {
-    display: grid;
-    gap: 10px;
-}
-
-.answer {
-    padding: 13px;
-    background: #101310;
-    border: 1px solid var(--border);
-    color: var(--text);
-    cursor: pointer;
-    font-family: inherit;
-    transition: .2s;
-}
-
-.answer:hover {
-    border-color: var(--gold);
-}
-
-.answer.correct {
-    background: #31502f;
-    border-color: #6fa065;
-}
-
-.answer.wrong {
-    background: #592a25;
-    border-color: #a84c40;
-}
-
-#quizResult {
-    margin-top: 20px;
-    color: var(--gold2);
-}
-
-/* FOOTER */
-
-footer {
-    border-top: 1px solid var(--border);
-    text-align: center;
-    padding: 35px 20px;
-    color: var(--muted);
-    background: #090b0a;
-}
-
-.disclaimer {
-    font-size: 12px;
-    max-width: 700px;
-    margin: 10px auto 0;
-}
-
-/* MODAL */
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    inset: 0;
-    background: rgba(0,0,0,.8);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-box {
-    max-width: 650px;
-    width: 100%;
-    background: #171b18;
-    border: 1px solid var(--gold);
-    padding: 30px;
-    box-shadow: 0 20px 60px #000;
-}
-
-.modal-box h2 {
-    color: var(--gold2);
-    margin-bottom: 15px;
-}
-
-.close {
-    float: right;
-    cursor: pointer;
-    font-size: 25px;
-    color: var(--muted);
-}
-
-.close:hover {
-    color: white;
-}
-
-/* RESPONSIVE */
-
-@media(max-width: 850px) {
-    .about-grid,
-    .country-grid,
-    .system-grid,
-    .glossary {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    nav ul {
-        display: none;
-    }
-}
-
-@media(max-width: 600px) {
-    .about-grid,
-    .country-grid,
-    .system-grid,
-    .glossary {
-        grid-template-columns: 1fr;
-    }
-
-    .hero h1 {
-        font-size: 48px;
-    }
-
-    .timeline::before {
-        left: 10px;
-    }
-
-    .event,
-    .event:nth-child(even),
-    .event:nth-child(odd) {
-        width: 100%;
-        left: 0;
-        text-align: left;
-        padding-left: 35px;
-        padding-right: 0;
-    }
-
-    .event:nth-child(odd) .event-dot,
-    .event:nth-child(even) .event-dot {
-        left: 3px;
-        right: auto;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<nav>
-    <div class="nav-inner">
-        <div class="logo">HOI4 // ARCHIVES</div>
-
-        <ul>
-            <li><a href="#about">Overview</a></li>
-            <li><a href="#countries">Countries</a></li>
-            <li><a href="#systems">Systems</a></li>
-            <li><a href="#timeline">Timeline</a></li>
-            <li><a href="#quiz">Quiz</a></li>
-        </ul>
-    </div>
-</nav>
-
-<header class="hero">
-    <div class="hero-content">
-        <div class="eyebrow">The World at War</div>
-
-        <h1>Hearts of <span>Iron IV</span></h1>
-
-        <p>
-            A fan-made interactive archive exploring the grand strategy,
-            nations, systems and history behind Paradox Interactive's
-            World War II grand strategy game.
-        </p>
-
-        <div class="buttons">
-            <a class="btn" href="#about">ENTER THE ARCHIVES</a>
-            <a class="btn red" href="#quiz">TEST YOUR KNOWLEDGE</a>
-        </div>
-    </div>
-</header>
-
-<section id="about">
-
-    <div class="section-title">
-        <h2>What is HOI4?</h2>
-        <div class="divider"></div>
-        <p>Grand strategy on a global scale.</p>
-    </div>
-
-    <div class="about-grid">
-
-        <div class="panel">
-            <h3>🌍 The World</h3>
-            <p>
-                Hearts of Iron IV is a grand strategy game set around the
-                Second World War. Players can control countries, develop
-                industry, research technologies, organize armies, conduct
-                diplomacy and attempt to shape the course of history.
-            </p>
-        </div>
-
-        <div class="panel">
-            <h3>⚔️ Your Nation</h3>
-            <p>
-                Every nation has different resources, geography, political
-                situations and strategic possibilities. You can attempt to
-                follow history — or create an entirely different world.
-            </p>
-        </div>
-
-    </div>
-
-    <div class="stats">
-        <div class="stat">
-            <div class="stat-number">1936</div>
-            <div class="stat-label">Common Campaign Start</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-number">1945+</div>
-            <div class="stat-label">Campaigns Can Continue</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-number">∞</div>
-            <div class="stat-label">Alternate Histories</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Strategic Decisions</div>
-        </div>
-    </div>
-
-</section>
-
-<section id="countries">
-
-    <div class="section-title">
-        <h2>Major Powers</h2>
-        <div class="divider"></div>
-        <p>Select a nation to open its archive entry.</p>
-    </div>
-
-    <div class="country-grid">
-
-        <div class="country" onclick="openCountry('Germany')">
-            <div class="flag">🇩🇪</div>
-            <h3>Germany</h3>
-            <p>A powerful industrial and military nation in Central Europe.</p>
-        </div>
-
-        <div class="country" onclick="openCountry('United Kingdom')">
-            <div class="flag">🇬🇧</div>
-            <h3>United Kingdom</h3>
-            <p>A global empire with a powerful navy and worldwide interests.</p>
-        </div>
-
-        <div class="country" onclick="openCountry('Soviet Union')">
-            <div class="flag">☭</div>
-            <h3>Soviet Union</h3>
-            <p>A huge continental power with enormous manpower and resources.</p>
-        </div>
-
-        <div class="country" onclick="openCountry('United States')">
-            <div class="flag">🇺🇸</div>
-            <h3>United States</h3>
-            <p>A major industrial power separated from Europe by the Atlantic.</p>
-        </div>
-
-        <div class="country" onclick="openCountry('Japan')">
-            <div class="flag">🇯🇵</div>
-            <h3>Japan</h3>
-            <p>An island empire focused on naval power and expansion in Asia.</p>
-        </div>
-
-        <div class="country" onclick="openCountry('Italy')">
-            <div class="flag">🇮🇹</div>
-            <h3>Italy</h3>
-            <p>A Mediterranean power with ambitions across Europe and Africa.</p>
-        </div>
-
-    </div>
-</section>
-
-<section id="systems">
-
-    <div class="section-title">
-        <h2>Game Systems</h2>
-        <div class="divider"></div>
-        <p>Click a category to learn more.</p>
-    </div>
-
-    <div class="system-grid">
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                ⚔️ Warfare <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Organize divisions, assign generals, create battle plans,
-                    manage front lines and coordinate land, air and naval forces.
-                </p>
-            </div>
-        </div>
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                🏭 Industry <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Build civilian and military factories, produce equipment,
-                    construct infrastructure and prepare your economy for war.
-                </p>
-            </div>
-        </div>
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                🔬 Research <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Research weapons, industry, electronics, doctrines and
-                    other technologies to improve your country's capabilities.
-                </p>
-            </div>
-        </div>
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                🏛️ Politics <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Political power can be used for decisions, advisors,
-                    laws and other changes that shape your country's direction.
-                </p>
-            </div>
-        </div>
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                ✈️ Air Power <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Build aircraft and assign air wings to missions such as
-                    air superiority, interception, bombing and close air support.
-                </p>
-            </div>
-        </div>
-
-        <div class="system">
-            <div class="system-header" onclick="toggleSystem(this)">
-                ⚓ Naval Warfare <span>+</span>
-            </div>
-            <div class="system-body">
-                <p>
-                    Design fleets, protect convoys, raid enemy shipping and
-                    contest important sea zones around the world.
-                </p>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<section id="timeline">
-
-    <div class="section-title">
-        <h2>Historical Timeline</h2>
-        <div class="divider"></div>
-        <p>Explore the era represented by the game.</p>
-    </div>
-
-    <div class="timeline">
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1936')">
-                <div class="year">1936</div>
-                <p>Campaigns commonly begin during a tense period of political and military preparation.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1939')">
-                <div class="year">1939</div>
-                <p>Germany invades Poland and Britain and France declare war.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1940')">
-                <div class="year">1940</div>
-                <p>Western Europe experiences major campaigns as the war expands.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1941')">
-                <div class="year">1941</div>
-                <p>The conflict expands dramatically, including Germany's invasion of the Soviet Union and Japan's attack on Pearl Harbor.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1944')">
-                <div class="year">1944</div>
-                <p>The Allied position strengthens as major offensives are launched in Europe.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-        <div class="event">
-            <div class="event-card" onclick="showEvent('1945')">
-                <div class="year">1945</div>
-                <p>Germany and Japan surrender, bringing the Second World War to an end.</p>
-            </div>
-            <div class="event-dot"></div>
-        </div>
-
-    </div>
-</section>
-
-<section id="glossary">
-
-    <div class="section-title">
-        <h2>HOI4 Glossary</h2>
-        <div class="divider"></div>
-        <p>Search common terms.</p>
-    </div>
-
-    <input
-        class="search"
-        id="glossarySearch"
-        type="text"
-        placeholder="Search terms..."
-        oninput="searchGlossary()"
-    >
-
-    <div class="glossary" id="glossaryList">
-
-        <div class="term">
-            <strong>Division</strong>
-            <p>A military formation made up of battalions and support companies.</p>
-        </div>
-
-        <div class="term">
-            <strong>National Focus</strong>
-            <p>A major country-specific decision represented through a focus tree.</p>
-        </div>
-
-        <div class="term">
-            <strong>Political Power</strong>
-            <p>A resource used for various political and governmental actions.</p>
-        </div>
-
-        <div class="term">
-            <strong>Battle Plan</strong>
-            <p>A planned military operation assigned to an army.</p>
-        </div>
-
-        <div class="term">
-            <strong>Convoy</strong>
-            <p>Ships used to transport resources, troops and supplies across oceans.</p>
-        </div>
-
-        <div class="term">
-            <strong>Supply</strong>
-            <p>The logistical network needed to keep armies operating effectively.</p>
-        </div>
-
-        <div class="term">
-            <strong>World Tension</strong>
-            <p>A global measure representing the escalation of international conflict.</p>
-        </div>
-
-        <div class="term">
-            <strong>Division Template</strong>
-            <p>The structure defining which battalions and support companies a division contains.</p>
-        </div>
-
-    </div>
-</section>
-
-<section id="quiz">
-
-    <div class="section-title">
-        <h2>Commander Quiz</h2>
-        <div class="divider"></div>
-        <p>How well do you know HOI4?</p>
-    </div>
-
-    <div class="quiz-box">
-
-        <div id="question" class="question"></div>
-
-        <div id="answers" class="answers"></div>
-
-        <div id="quizResult"></div>
-
-        <button class="btn" id="nextButton" style="margin-top:20px; display:none;" onclick="nextQuestion()">
-            NEXT QUESTION
-        </button>
-
-    </div>
-
-</section>
-
-<footer>
-
-    <div>HOI4 // ARCHIVES</div>
-
-    <p class="disclaimer">
-        This is an unofficial fan-made website and is not affiliated with
-        or endorsed by Paradox Interactive. Hearts of Iron IV and related
-        trademarks belong to their respective owners.
-    </p>
-
-</footer>
-
-<!-- MODAL -->
-
-<div class="modal" id="modal">
-
-    <div class="modal-box">
-
-        <span class="close" onclick="closeModal()">×</span>
-
-        <h2 id="modalTitle"></h2>
-
-        <p id="modalText"></p>
-
-    </div>
-
-</div>
-
-<script>
-
-/* COUNTRY ARCHIVES */
-
-const countryData = {
-
-    "Germany": {
-        title: "Germany — Industrial Power",
-        text: "Germany begins with a strong industrial base and a central position in Europe. In HOI4, it can pursue many different strategies, ranging from historical expansion to completely alternate political paths."
-    },
-
-    "United Kingdom": {
-        title: "United Kingdom — Global Empire",
-        text: "The United Kingdom begins with interests spread across the globe. Its naval strength, overseas territories and strategic position make it a very different experience from playing a continental power."
-    },
-
-    "Soviet Union": {
-        title: "Soviet Union — The Eastern Giant",
-        text: "The Soviet Union possesses enormous territory, manpower and resources. Its position makes preparation and logistics especially important when facing a major land war."
-    },
-
-    "United States": {
-        title: "United States — Industrial Giant",
-        text: "The United States has huge industrial potential and is initially protected by its geographic position. Its challenge is transforming that potential into military power."
-    },
-
-    "Japan": {
-        title: "Japan — Pacific Empire",
-        text: "Japan combines land warfare in Asia with naval and air operations across the Pacific. Resource access and control of sea lanes are important strategic concerns."
-    },
-
-    "Italy": {
-        title: "Italy — Mediterranean Ambitions",
-        text: "Italy starts with interests around the Mediterranean and North Africa. Its geography creates opportunities as well as difficult logistical problems."
-    }
-
-};
-
-function openCountry(country) {
-
-    document.getElementById("modalTitle").textContent =
-        countryData[country].title;
-
-    document.getElementById("modalText").textContent =
-        countryData[country].text;
-
-    document.getElementById("modal").classList.add("active");
-}
-
-function closeModal() {
-    document.getElementById("modal").classList.remove("active");
-}
-
-document.getElementById("modal").addEventListener("click", function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
-
-
-/* GAME SYSTEM ACCORDIONS */
-
-function toggleSystem(header) {
-
-    const system = header.parentElement;
-
-    system.classList.toggle("open");
-
-    const symbol = header.querySelector("span");
-
-    symbol.textContent =
-        system.classList.contains("open") ? "−" : "+";
-}
-
-
-/* TIMELINE */
-
-const eventData = {
-
-    "1936": "The game commonly begins in 1936. Nations have time to industrialize, research technologies, reorganize their militaries and pursue political objectives before major conflict begins.",
-
-    "1939": "The European war begins after Germany invades Poland. Britain and France enter the conflict against Germany.",
-
-    "1940": "Germany launches campaigns in Western Europe. France falls and Britain faces the threat of invasion.",
-
-    "1941": "Germany launches Operation Barbarossa against the Soviet Union. Japan attacks Pearl Harbor, bringing the United States into the war.",
-
-    "1944": "The Allies launch Operation Overlord in Western Europe while the Soviet Union continues its advance from the east.",
-
-    "1945": "Germany surrenders in May. Japan surrenders later in the year following the atomic bombings and Soviet entry into the war against Japan."
-};
-
-function showEvent(year) {
-
-    document.getElementById("modalTitle").textContent =
-        year + " — Historical Archive";
-
-    document.getElementById("modalText").textContent =
-        eventData[year];
-
-    document.getElementById("modal").classList.add("active");
-}
-
-
-/* GLOSSARY SEARCH */
-
-function searchGlossary() {
-
-    const query =
-        document.getElementById("glossarySearch")
-        .value
-        .toLowerCase();
-
-    const terms =
-        document.querySelectorAll(".term");
-
-    terms.forEach(term => {
-
-        const text =
-            term.textContent.toLowerCase();
-
-        term.style.display =
-            text.includes(query) ? "block" : "none";
-
-    });
-}
-
-
-/* QUIZ */
-
-const questions = [
-
-    {
-        question: "What type of game is Hearts of Iron IV?",
-        answers: [
-            "Grand strategy",
-            "First-person shooter",
-            "Racing game",
-            "Puzzle game"
-        ],
-        correct: 0
-    },
-
-    {
-        question: "What resource is commonly used for political decisions?",
-        answers: [
-            "Political Power",
-            "Gold Coins",
-            "Mana",
-            "Experience Points only"
-        ],
-        correct: 0
-    },
-
-    {
-        question: "Which system lets you organize military formations?",
-        answers: [
-            "Division templates",
-            "Diplomatic notes",
-            "Trade routes",
-            "Focus icons"
-        ],
-        correct: 0
-    },
-
-    {
-        question: "Which year is a common starting point for a HOI4 campaign?",
-        answers: [
-            "1936",
-            "1914",
-            "1960",
-            "2001"
-        ],
-        correct: 0
-    },
-
-    {
-        question: "What does a national focus tree primarily represent?",
-        answers: [
-            "Country-specific political and strategic goals",
-            "A multiplayer ranking",
-            "A graphics setting",
-            "A list of saved games"
-        ],
-        correct: 0
-    }
-
-];
-
-let currentQuestion = 0;
-let score = 0;
-
-function loadQuestion() {
-
-    const q = questions[currentQuestion];
-
-    document.getElementById("question").textContent =
-        q.question;
-
-    const answers =
-        document.getElementById("answers");
-
-    answers.innerHTML = "";
-
-    document.getElementById("quizResult").textContent = "";
-
-    document.getElementById("nextButton").style.display = "none";
-
-    q.answers.forEach((answer, index) => {
-
-        const button =
-            document.createElement("button");
-
-        button.className = "answer";
-
-        button.textContent = answer;
-
-        button.onclick = () =>
-            selectAnswer(button, index);
-
-        answers.appendChild(button);
-    });
-}
-
-function selectAnswer(button, index) {
-
-    const q = questions[currentQuestion];
-
-    const buttons =
-        document.querySelectorAll(".answer");
-
-    buttons.forEach(btn => btn.disabled = true);
-
-    if (index === q.correct) {
-
-        button.classList.add("correct");
-
-        score++;
-
-        document.getElementById("quizResult").textContent =
-            "✓ Correct. Excellent work, commander.";
-
-    } else {
-
-        button.classList.add("wrong");
-
-        buttons[q.correct].classList.add("correct");
-
-        document.getElementById("quizResult").textContent =
-            "✕ Incorrect. The correct answer is highlighted.";
-
-    }
-
-    document.getElementById("nextButton").style.display =
-        "inline-block";
-}
-
-function nextQuestion() {
-
-    currentQuestion++;
-
-    if (currentQuestion >= questions.length) {
-
-        document.getElementById("question").textContent =
-            "Campaign Complete";
-
-        document.getElementById("answers").innerHTML = "";
-
-        document.getElementById("quizResult").innerHTML =
-            "<strong>You scored " +
-            score +
-            " / " +
-            questions.length +
-            ".</strong><br><br>" +
-            (score === questions.length
-                ? "Outstanding. A true field marshal."
-                : "Good effort. Study the archives and try again.");
-
-        const button =
-            document.getElementById("nextButton");
-
-        button.textContent = "PLAY AGAIN";
-
-        button.onclick = restartQuiz;
-
-        return;
-    }
-
-    loadQuestion();
-}
-
-function restartQuiz() {
-
-    currentQuestion = 0;
-    score = 0;
-
-    const button =
-        document.getElementById("nextButton");
-
-    button.textContent = "NEXT QUESTION";
-
-    button.onclick = nextQuestion;
-
-    loadQuestion();
-}
-
-
-/* START QUIZ */
-
-loadQuestion();
-
-
-/* KEYBOARD SHORTCUT */
-
-document.addEventListener("keydown", function(e) {
-
-    if (e.key === "Escape") {
-        closeModal();
-    }
-
-});
-
-</script>
-
-</body>
-</html>
-
-
-You said:
-
-make it better
-
-ChatGPT said:
-Yes — I’d make it feel much more like a real HOI4 fan portal rather than a basic information page: animated map-style background, proper game dashboard, country selector, interactive “intel” panels, focus-tree visualization, doctrine cards, timeline slider, searchable database, quiz scoring, and a better mobile layout.
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="HOI4 Fan Portal — an unofficial Hearts of Iron IV interactive website.">
-<title>HOI4 // WAR ROOM</title>
-
-<style>
 :root{
-    --bg:#080b09;
-    --bg2:#101510;
-    --panel:#151b16;
-    --panel2:#1b231c;
-    --line:#394239;
-    --gold:#c8a45c;
-    --gold2:#efd18a;
-    --red:#9b3f35;
-    --red2:#d05a4b;
-    --green:#65865d;
-    --blue:#58758a;
-    --text:#e9e5d8;
-    --muted:#92998f;
-    --white:#fff;
+    --bg:#070a08;
+    --bg2:#0d120e;
+    --panel:#121913;
+    --panel2:#182019;
+    --panel3:#202a20;
+    --border:#354035;
+    --border2:#4c5b4b;
+
+    --gold:#c8a55e;
+    --gold2:#efd38d;
+    --gold3:#806b3e;
+
+    --red:#963e35;
+    --red2:#d75b4d;
+
+    --green:#65915e;
+    --green2:#8fbd82;
+
+    --blue:#557b91;
+
+    --text:#e8e4d7;
+    --muted:#929b91;
+
+    --shadow:rgba(0,0,0,.65);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-html{scroll-behavior:smooth}
+html{
+    scroll-behavior:smooth;
+}
 
 body{
     background:
-        radial-gradient(circle at 50% -10%,#273027 0,transparent 35%),
-        linear-gradient(120deg,#070907,#111711 50%,#080b08);
+        radial-gradient(circle at 50% -15%,#2c372d 0,transparent 35%),
+        linear-gradient(120deg,#060806,#101610 50%,#070a07);
     color:var(--text);
     font-family:Georgia,"Times New Roman",serif;
     line-height:1.6;
     overflow-x:hidden;
 }
 
-/* subtle military grid */
+/* ---------------------------------------------------------
+   ATMOSPHERE
+--------------------------------------------------------- */
 
-body:before{
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:9998;
+    pointer-events:none;
+    opacity:.035;
+
+    background-image:
+        linear-gradient(#fff 1px,transparent 1px),
+        linear-gradient(90deg,#fff 1px,transparent 1px);
+
+    background-size:45px 45px;
+}
+
+body::after{
     content:"";
     position:fixed;
     inset:0;
     pointer-events:none;
-    opacity:.045;
-    background-image:
-        linear-gradient(#fff 1px,transparent 1px),
-        linear-gradient(90deg,#fff 1px,transparent 1px);
-    background-size:45px 45px;
-    z-index:9999;
+    z-index:9997;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.018) 0,
+            rgba(255,255,255,.018) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+
+    opacity:.15;
 }
 
-/* NAV */
+a{
+    color:inherit;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+/* ---------------------------------------------------------
+   NAVIGATION
+--------------------------------------------------------- */
 
 nav{
     position:fixed;
-    z-index:1000;
     top:0;
-    width:100%;
-    border-bottom:1px solid #30372f;
-    background:rgba(7,10,8,.92);
+    left:0;
+    right:0;
+    z-index:1000;
+
+    background:rgba(5,8,6,.92);
     backdrop-filter:blur(12px);
+
+    border-bottom:1px solid #303a30;
 }
 
 .nav{
-    max-width:1250px;
+    max-width:1350px;
     margin:auto;
-    min-height:65px;
+
+    min-height:68px;
     padding:0 20px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+    gap:25px;
 }
 
-.brand{
+.logo{
+    color:var(--gold2);
     font-weight:bold;
     letter-spacing:3px;
-    color:var(--gold2);
+    font-size:18px;
     white-space:nowrap;
 }
 
-.brand small{
-    color:var(--muted);
-    letter-spacing:1px;
-    font-size:9px;
+.logo small{
     display:block;
+    color:var(--muted);
+    font-size:8px;
+    letter-spacing:2px;
+    margin-top:-3px;
 }
 
-nav ul{
+.nav-links{
     display:flex;
-    gap:5px;
+    gap:4px;
     list-style:none;
 }
 
-nav a{
-    color:#a9afa6;
+.nav-links a{
+    display:block;
     text-decoration:none;
-    padding:8px 12px;
-    font-size:14px;
+    color:#aab0a8;
+
+    padding:9px 12px;
+
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+
+    border:1px solid transparent;
+
     transition:.2s;
 }
 
-nav a:hover{
+.nav-links a:hover{
     color:var(--gold2);
-    background:#20271f;
+    background:#1b231c;
+    border-color:#364136;
 }
 
-/* HERO */
+.nav-online{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#91a18b;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.online-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#72a867;
+    box-shadow:0 0 12px #72a867;
+}
+
+/* ---------------------------------------------------------
+   HERO
+--------------------------------------------------------- */
 
 .hero{
     min-height:100vh;
-    padding:120px 20px 70px;
-    display:flex;
-    align-items:center;
     position:relative;
     overflow:hidden;
+
+    padding:130px 20px 80px;
+
+    display:flex;
+    align-items:center;
 }
 
 .hero-map{
     position:absolute;
-    inset:0;
-    opacity:.18;
+    inset:-10%;
+
+    opacity:.19;
+
     background:
-        radial-gradient(ellipse at 25% 50%,transparent 0 10%,#687565 10.2% 10.5%,transparent 10.8%),
-        radial-gradient(ellipse at 65% 35%,transparent 0 15%,#596657 15.2% 15.5%,transparent 15.8%),
-        repeating-linear-gradient(25deg,transparent 0 45px,#53604f 46px,transparent 47px);
-    filter:blur(1px);
-    animation:mapMove 18s linear infinite;
+        radial-gradient(ellipse at 20% 40%,transparent 0 9%,#6d7b67 9.2% 9.5%,transparent 9.8%),
+        radial-gradient(ellipse at 45% 65%,transparent 0 14%,#65725f 14.2% 14.5%,transparent 14.8%),
+        radial-gradient(ellipse at 75% 35%,transparent 0 11%,#56634f 11.2% 11.5%,transparent 11.8%),
+        repeating-linear-gradient(
+            25deg,
+            transparent 0 50px,
+            rgba(113,132,104,.5) 51px,
+            transparent 52px
+        );
+
+    animation:mapMove 22s ease-in-out infinite;
 }
 
 @keyframes mapMove{
-    from{transform:scale(1)}
-    50%{transform:scale(1.08) translate(-15px,8px)}
-    to{transform:scale(1)}
+    0%,100%{
+        transform:scale(1) translate(0,0);
+    }
+    50%{
+        transform:scale(1.08) translate(-20px,12px);
+    }
 }
 
-.hero:after{
+.hero::before{
     content:"";
     position:absolute;
     inset:0;
+
     background:
-        linear-gradient(90deg,rgba(5,7,6,.97),rgba(5,7,6,.68),rgba(5,7,6,.95)),
-        linear-gradient(0deg,#080b09 0,transparent 40%,#080b09 100%);
+        linear-gradient(
+            90deg,
+            rgba(4,6,5,.98),
+            rgba(4,6,5,.72),
+            rgba(4,6,5,.96)
+        ),
+        linear-gradient(
+            0deg,
+            #070a08 0,
+            transparent 35%,
+            #070a08 100%
+        );
 }
 
 .hero-content{
     position:relative;
     z-index:2;
-    max-width:1250px;
+
+    max-width:1350px;
     width:100%;
     margin:auto;
 }
 
-.status{
+.hero-label{
     display:inline-flex;
-    gap:10px;
     align-items:center;
-    border:1px solid #465043;
-    background:#111711aa;
-    padding:7px 12px;
-    color:#aab3a6;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:2px;
-}
+    gap:10px;
 
-.status-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#70a05f;
-    box-shadow:0 0 12px #70a05f;
+    border:1px solid #465246;
+    background:#0e130fcc;
+
+    padding:7px 12px;
+
+    color:#aab4a6;
+    font-size:10px;
+
+    letter-spacing:2px;
+    text-transform:uppercase;
 }
 
 .hero h1{
-    font-size:clamp(55px,9vw,125px);
-    line-height:.9;
-    text-transform:uppercase;
     margin:25px 0;
+
+    font-size:clamp(55px,9vw,135px);
+    line-height:.86;
+
     letter-spacing:5px;
-    color:#e1ddcf;
-    text-shadow:5px 6px #050605;
+    text-transform:uppercase;
+
+    color:#e3dfd2;
+
+    text-shadow:
+        5px 6px 0 #030403,
+        0 0 40px #000;
 }
 
-.hero h1 span{color:var(--gold2)}
+.hero h1 span{
+    color:var(--gold2);
+}
 
-.hero-copy{
-    max-width:700px;
-    color:#aeb2a9;
+.hero-description{
+    max-width:730px;
+
+    color:#adb2a9;
     font-size:19px;
 }
 
 .hero-buttons{
     display:flex;
-    gap:12px;
+    gap:10px;
     flex-wrap:wrap;
+
     margin-top:30px;
 }
 
 .btn{
-    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
     border:1px solid var(--gold);
-    background:#141a15;
+    background:#111711;
+
     color:var(--gold2);
+
     padding:12px 20px;
-    font-family:inherit;
+
+    text-decoration:none;
+    cursor:pointer;
+
     font-weight:bold;
+    font-size:13px;
+
     transition:.2s;
 }
 
@@ -1562,7 +353,7 @@ nav a:hover{
 
 .btn.red{
     border-color:var(--red2);
-    color:#e8aaa1;
+    color:#efaaa1;
 }
 
 .btn.red:hover{
@@ -1570,101 +361,147 @@ nav a:hover{
     color:white;
 }
 
-.hero-stats{
+.btn.secondary{
+    border-color:#536053;
+    color:#aab2a8;
+}
+
+.btn.secondary:hover{
+    background:#273027;
+    color:white;
+}
+
+.hero-dashboard{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    max-width:850px;
-    margin-top:50px;
-    border:1px solid #30382f;
-    background:#0b0f0cbb;
+    grid-template-columns:repeat(5,1fr);
+
+    max-width:1000px;
+
+    margin-top:55px;
+
+    border:1px solid #303a31;
+    background:#080c09d9;
 }
 
 .hero-stat{
-    padding:18px;
-    border-right:1px solid #30382f;
+    padding:17px;
+
+    border-right:1px solid #303a31;
 }
 
-.hero-stat:last-child{border:0}
+.hero-stat:last-child{
+    border-right:0;
+}
 
 .hero-stat b{
-    color:var(--gold2);
-    font-size:22px;
     display:block;
+
+    color:var(--gold2);
+    font-size:20px;
 }
 
 .hero-stat span{
     color:var(--muted);
-    font-size:11px;
+
+    font-size:9px;
     text-transform:uppercase;
     letter-spacing:1px;
 }
 
-/* SECTIONS */
+/* ---------------------------------------------------------
+   COMMON
+--------------------------------------------------------- */
 
 section{
-    max-width:1250px;
+    max-width:1350px;
     margin:auto;
     padding:100px 20px;
 }
 
-.section-head{
-    margin-bottom:40px;
+.section-heading{
+    margin-bottom:38px;
 }
 
 .kicker{
     color:var(--red2);
+
+    font-size:10px;
     text-transform:uppercase;
     letter-spacing:3px;
-    font-size:11px;
 }
 
-.section-head h2{
-    font-size:42px;
-    text-transform:uppercase;
+.section-heading h2{
     color:var(--gold2);
+
+    font-size:43px;
+    text-transform:uppercase;
     letter-spacing:2px;
 }
 
-.section-head p{
+.section-heading p{
     color:var(--muted);
-    max-width:650px;
+    max-width:720px;
 }
 
-.line{
+.gold-line{
+    width:80px;
     height:2px;
-    width:75px;
+
+    margin:11px 0;
+
     background:var(--gold);
-    margin:12px 0;
-}
-
-/* DASHBOARD */
-
-.dashboard{
-    display:grid;
-    grid-template-columns:1.4fr .6fr;
-    gap:20px;
 }
 
 .panel{
-    border:1px solid var(--line);
     background:
-        linear-gradient(145deg,rgba(35,44,35,.9),rgba(14,18,15,.95));
-    box-shadow:0 20px 45px #0008;
+        linear-gradient(
+            145deg,
+            rgba(29,39,30,.95),
+            rgba(12,16,13,.98)
+        );
+
+    border:1px solid var(--border);
+
+    box-shadow:
+        0 20px 50px var(--shadow);
 }
 
 .panel-title{
-    border-bottom:1px solid var(--line);
-    padding:14px 18px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
+
+    padding:14px 18px;
+
+    border-bottom:1px solid var(--border);
+
     color:var(--gold2);
+
+    font-size:11px;
+    font-weight:bold;
+
     text-transform:uppercase;
-    letter-spacing:1px;
-    font-size:13px;
+    letter-spacing:1.5px;
 }
 
-.panel-body{padding:22px}
+.panel-title span{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.panel-body{
+    padding:22px;
+}
+
+/* ---------------------------------------------------------
+   WAR ROOM
+--------------------------------------------------------- */
+
+.command-grid{
+    display:grid;
+    grid-template-columns:1.5fr .8fr;
+    gap:18px;
+}
 
 .resource-grid{
     display:grid;
@@ -1673,255 +510,388 @@ section{
 }
 
 .resource{
-    border:1px solid #323a32;
-    background:#0d120e;
-    padding:15px;
+    padding:17px;
+
+    background:#0a0f0b;
+
+    border:1px solid #303a31;
 }
 
-.resource .icon{font-size:24px}
+.resource-icon{
+    font-size:24px;
+}
 
-.resource b{
+.resource strong{
     display:block;
+
     color:var(--gold2);
-    font-size:20px;
+    font-size:22px;
 }
 
-.resource small{color:var(--muted)}
+.resource small{
+    color:var(--muted);
+}
 
 .progress{
-    height:7px;
-    background:#090c0a;
-    margin-top:8px;
+    height:6px;
+
+    margin-top:9px;
+
+    background:#070907;
     overflow:hidden;
 }
 
 .progress i{
     display:block;
+
     height:100%;
+
     background:var(--gold);
 }
 
-.news{
+.intel{
     display:grid;
-    gap:10px;
+    gap:9px;
 }
 
-.news-item{
+.intel-item{
+    padding:12px;
+
+    background:#0c110d;
+
     border-left:3px solid var(--red);
-    padding:10px 13px;
-    background:#101510;
 }
 
-.news-item b{color:#d5d1c3}
+.intel-item strong{
+    color:#d9d5c8;
+}
 
-.news-item small{
+.intel-item small{
     display:block;
     color:var(--muted);
 }
 
-/* COUNTRY COMMAND */
+/* ticker */
+
+.ticker{
+    overflow:hidden;
+
+    margin-top:18px;
+
+    border:1px solid var(--border);
+    background:#0a0e0b;
+}
+
+.ticker-track{
+    display:flex;
+    width:max-content;
+
+    animation:ticker 35s linear infinite;
+}
+
+.ticker-item{
+    padding:9px 30px;
+
+    color:#aab1a6;
+
+    font-size:11px;
+
+    border-right:1px solid #2c352d;
+}
+
+@keyframes ticker{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+}
+
+/* ---------------------------------------------------------
+   COUNTRY COMMAND
+--------------------------------------------------------- */
 
 .country-layout{
     display:grid;
-    grid-template-columns:260px 1fr;
-    gap:20px;
+    grid-template-columns:270px 1fr;
+    gap:18px;
 }
 
-.country-list{
+.country-buttons{
     display:grid;
-    gap:5px;
     align-content:start;
+    gap:5px;
 }
 
-.country-button{
-    border:1px solid var(--line);
-    background:#111611;
-    color:#aaaFA6;
+.country-btn{
     text-align:left;
+
     padding:15px;
+
+    border:1px solid var(--border);
+    background:#0d120e;
+
+    color:#aeb4aa;
+
     cursor:pointer;
-    font-family:inherit;
+
     transition:.2s;
 }
 
-.country-button:hover,
-.country-button.active{
+.country-btn:hover,
+.country-btn.active{
     color:var(--gold2);
-    background:#202820;
+
+    background:#202920;
+
     border-color:var(--gold);
 }
 
-.country-main{
-    min-height:410px;
-}
-
-.country-top{
+.country-header{
     display:flex;
-    gap:25px;
+    gap:22px;
     align-items:center;
-    margin-bottom:25px;
 }
 
-.country-flag{
-    font-size:70px;
+.flag{
     width:100px;
     height:100px;
+
     display:grid;
     place-items:center;
-    background:#0b0f0c;
-    border:1px solid var(--line);
+
+    border:1px solid var(--border);
+
+    background:#080c09;
+
+    font-size:65px;
 }
 
-.country-main h3{
-    font-size:35px;
+.country-header h3{
     color:var(--gold2);
+    font-size:36px;
 }
 
-.country-main .sub{
+.country-sub{
     color:var(--muted);
+}
+
+.country-description{
+    color:#adb4aa;
+    margin-top:20px;
 }
 
 .meters{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-top:20px;
+    gap:10px;
+
+    margin-top:25px;
 }
 
 .meter{
-    border:1px solid var(--line);
     padding:14px;
-    background:#0d120e;
+
+    border:1px solid var(--border);
+    background:#0a0f0b;
 }
 
 .meter label{
     color:var(--muted);
-    font-size:11px;
+
+    font-size:9px;
     text-transform:uppercase;
+    letter-spacing:1px;
 }
 
 .meter strong{
     display:block;
+
     color:var(--gold2);
-    font-size:20px;
+    font-size:21px;
 }
 
-.meter .progress i{
-    background:var(--green);
-}
+/* ---------------------------------------------------------
+   FOCUS TREE
+--------------------------------------------------------- */
 
-/* FOCUS TREE */
+.focus-wrapper{
+    overflow-x:auto;
+    padding:25px;
+}
 
 .focus-tree{
-    padding:25px;
-    overflow-x:auto;
-}
+    min-width:850px;
 
-.tree{
-    min-width:750px;
     display:flex;
     flex-direction:column;
-    gap:25px;
     align-items:center;
+    gap:28px;
 }
 
 .focus-row{
     display:flex;
-    gap:25px;
     align-items:center;
+    justify-content:center;
+    gap:18px;
 }
 
 .focus{
-    width:180px;
-    min-height:80px;
-    padding:12px;
-    background:#161e17;
-    border:2px solid #4a5749;
+    width:190px;
+    min-height:88px;
+
+    padding:13px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
     text-align:center;
+
+    border:2px solid #465346;
+
+    background:
+        linear-gradient(145deg,#1b251c,#101610);
+
     cursor:pointer;
+
     transition:.2s;
 }
 
 .focus:hover{
+    transform:translateY(-4px);
+
     border-color:var(--gold2);
-    transform:translateY(-3px);
+
+    box-shadow:0 8px 20px #0008;
 }
 
-.focus.completed{
-    border-color:#9b7d42;
-    background:#2a2417;
+.focus.done{
+    border-color:var(--gold);
+
+    background:#2c2617;
+}
+
+.focus-title{
+    color:var(--gold2);
+    font-weight:bold;
 }
 
 .focus small{
-    display:block;
     color:var(--muted);
     margin-top:5px;
 }
 
 .connector{
-    width:30px;
+    width:35px;
     height:2px;
-    background:var(--gold);
+    background:var(--gold3);
 }
 
-/* SYSTEM CARDS */
+/* ---------------------------------------------------------
+   GAME SYSTEMS
+--------------------------------------------------------- */
 
-.cards{
+.system-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:15px;
 }
 
-.card{
+.system{
+    position:relative;
+
+    min-height:245px;
+
     padding:25px;
-    border:1px solid var(--line);
-    background:linear-gradient(145deg,#1a211a,#0e120f);
-    transition:.2s;
+
+    background:
+        linear-gradient(145deg,#1b231b,#0e120f);
+
+    border:1px solid var(--border);
+
+    transition:.25s;
 }
 
-.card:hover{
+.system:hover{
     transform:translateY(-5px);
-    border-color:#76633d;
+    border-color:#806b3e;
 }
 
-.card-icon{font-size:35px}
+.system-number{
+    position:absolute;
+    top:12px;
+    right:15px;
 
-.card h3{
+    color:#3b453b;
+    font-size:13px;
+}
+
+.system-icon{
+    font-size:38px;
+}
+
+.system h3{
     color:var(--gold2);
+    font-size:23px;
+
     margin:10px 0;
 }
 
-.card p{color:var(--muted)}
-
-.learn{
-    margin-top:15px;
-    border:0;
-    background:none;
-    color:var(--red2);
-    font-family:inherit;
-    cursor:pointer;
+.system p{
+    color:var(--muted);
 }
 
-/* TIMELINE */
+.system button{
+    margin-top:15px;
 
-.timeline-wrap{
-    border:1px solid var(--line);
-    background:#0d120e;
+    border:0;
+    background:none;
+
+    color:var(--red2);
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+/* ---------------------------------------------------------
+   TIMELINE
+--------------------------------------------------------- */
+
+.timeline-box{
     padding:30px;
+
+    border:1px solid var(--border);
+
+    background:#0a0f0b;
 }
 
 .timeline-year{
     text-align:center;
-    font-size:65px;
+
     color:var(--gold2);
+
+    font-size:72px;
+    line-height:1;
+}
+
+.timeline-title{
+    text-align:center;
+
+    margin-top:10px;
+
+    color:#d8d4c7;
+
+    font-size:22px;
 }
 
 .timeline-description{
+    max-width:760px;
+    min-height:70px;
+
+    margin:8px auto 25px;
+
     text-align:center;
-    max-width:700px;
-    margin:auto;
-    min-height:75px;
-    color:#b5b8af;
+
+    color:var(--muted);
 }
 
 input[type=range]{
@@ -1930,24 +900,39 @@ input[type=range]{
     cursor:pointer;
 }
 
-.year-labels{
+.timeline-labels{
     display:flex;
     justify-content:space-between;
-    color:var(--muted);
-    font-size:12px;
-    margin-top:8px;
+
+    color:#777f75;
+
+    font-size:10px;
 }
 
-/* GLOSSARY */
+/* ---------------------------------------------------------
+   GLOSSARY
+--------------------------------------------------------- */
 
-.search{
-    width:100%;
-    padding:15px;
-    border:1px solid var(--line);
-    background:#090d0a;
-    color:white;
-    font:inherit;
+.search-box{
+    position:relative;
     margin-bottom:18px;
+}
+
+.search-box input{
+    width:100%;
+
+    padding:16px 18px;
+
+    background:#080c09;
+
+    color:white;
+
+    border:1px solid var(--border);
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:var(--gold);
 }
 
 .glossary{
@@ -1957,35 +942,133 @@ input[type=range]{
 }
 
 .term{
-    border:1px solid var(--line);
     padding:17px;
-    background:#111611;
+
+    border:1px solid var(--border);
+
+    background:#101610;
+
+    transition:.2s;
 }
 
-.term b{color:var(--gold2)}
+.term:hover{
+    border-color:#526052;
+}
+
+.term b{
+    color:var(--gold2);
+}
 
 .term p{
     color:var(--muted);
     font-size:14px;
 }
 
-/* QUIZ */
+/* ---------------------------------------------------------
+   LINKS
+--------------------------------------------------------- */
+
+.links-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.link-card{
+    min-height:185px;
+
+    padding:23px;
+
+    display:flex;
+    flex-direction:column;
+
+    text-decoration:none;
+
+    border:1px solid var(--border);
+
+    background:
+        linear-gradient(145deg,#192119,#0d120e);
+
+    transition:.25s;
+}
+
+.link-card:hover{
+    transform:translateY(-5px);
+
+    border-color:var(--gold);
+
+    background:#202920;
+}
+
+.link-icon{
+    font-size:35px;
+}
+
+.link-card h3{
+    color:var(--gold2);
+
+    margin:10px 0 5px;
+}
+
+.link-card p{
+    color:var(--muted);
+
+    font-size:13px;
+}
+
+.link-card span{
+    margin-top:auto;
+
+    padding-top:15px;
+
+    color:var(--red2);
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+/* ---------------------------------------------------------
+   QUIZ
+--------------------------------------------------------- */
 
 .quiz{
-    max-width:800px;
+    max-width:850px;
     margin:auto;
 }
 
 .quiz-box{
-    border:1px solid var(--line);
-    background:#111611;
-    padding:30px;
+    padding:35px;
+
     text-align:center;
+
+    border:1px solid var(--border);
+
+    background:#111711;
+}
+
+.quiz-progress{
+    height:4px;
+
+    margin-bottom:25px;
+
+    background:#080c09;
+}
+
+.quiz-progress i{
+    display:block;
+    height:100%;
+    background:var(--gold);
+
+    width:20%;
+    transition:.3s;
 }
 
 .question{
     color:var(--gold2);
-    font-size:24px;
+
+    font-size:25px;
+
     margin-bottom:25px;
 }
 
@@ -1997,134 +1080,253 @@ input[type=range]{
 
 .answer{
     padding:15px;
-    border:1px solid var(--line);
-    background:#0b0f0c;
+
     color:var(--text);
-    font:inherit;
+
+    background:#090d0a;
+
+    border:1px solid var(--border);
+
     cursor:pointer;
+
+    transition:.2s;
 }
 
-.answer:hover{border-color:var(--gold)}
+.answer:hover{
+    border-color:var(--gold);
+    background:#1b231c;
+}
 
 .answer.correct{
-    background:#28462b;
-    border-color:#74a06e;
+    background:#29452c;
+    border-color:#79a66f;
 }
 
 .answer.wrong{
-    background:#542722;
-    border-color:#bd5547;
+    background:#522823;
+    border-color:#c45b4d;
 }
 
-.quiz-score{
+.quiz-result{
+    min-height:28px;
+
     margin-top:20px;
+
     color:var(--gold2);
 }
 
-/* FOOTER */
+/* ---------------------------------------------------------
+   FOOTER
+--------------------------------------------------------- */
 
 footer{
-    border-top:1px solid var(--line);
-    background:#070907;
-    padding:45px 20px;
+    padding:55px 20px;
+
     text-align:center;
+
+    background:#060806;
+
+    border-top:1px solid var(--border);
+
     color:var(--muted);
 }
 
 footer strong{
     color:var(--gold2);
-    letter-spacing:3px;
+
+    letter-spacing:4px;
 }
 
-footer p{
-    max-width:700px;
-    margin:10px auto;
+.footer-links{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+
+    margin:18px 0;
+}
+
+.footer-links a{
+    color:#969e94;
     font-size:12px;
 }
 
-/* MODAL */
+.footer-links a:hover{
+    color:var(--gold2);
+}
+
+.disclaimer{
+    max-width:750px;
+
+    margin:auto;
+
+    font-size:11px;
+}
+
+/* ---------------------------------------------------------
+   MODAL
+--------------------------------------------------------- */
 
 .modal{
     position:fixed;
     inset:0;
+
     z-index:5000;
+
     display:none;
     place-items:center;
+
     padding:20px;
-    background:#000c;
+
+    background:rgba(0,0,0,.82);
 }
 
-.modal.show{display:grid}
+.modal.show{
+    display:grid;
+}
 
 .modal-box{
-    width:min(650px,100%);
-    border:1px solid var(--gold);
-    background:#151b16;
-    box-shadow:0 30px 100px #000;
+    width:min(700px,100%);
+
     padding:30px;
+
+    background:#151c16;
+
+    border:1px solid var(--gold);
+
+    box-shadow:0 30px 100px #000;
 }
 
-.modal-box h2{color:var(--gold2)}
+.modal-box h2{
+    color:var(--gold2);
+}
 
 .modal-box p{
-    color:#b5b8af;
+    color:#b5bbb1;
     margin-top:12px;
 }
 
 .close{
     float:right;
-    cursor:pointer;
+
     color:var(--muted);
+
+    cursor:pointer;
+
     font-size:25px;
 }
 
-/* MOBILE */
+/* ---------------------------------------------------------
+   MOBILE
+--------------------------------------------------------- */
 
-@media(max-width:900px){
-    nav ul{display:none}
-    .dashboard,
-    .country-layout{grid-template-columns:1fr}
-    .cards{grid-template-columns:1fr 1fr}
-    .hero-stats{grid-template-columns:1fr 1fr}
+@media(max-width:1000px){
+
+    .nav-links{
+        display:none;
+    }
+
+    .command-grid{
+        grid-template-columns:1fr;
+    }
+
+    .system-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .links-grid{
+        grid-template-columns:1fr 1fr;
+    }
 }
 
-@media(max-width:600px){
-    section{padding:70px 15px}
-    .hero h1{font-size:52px}
+@media(max-width:700px){
+
+    section{
+        padding:75px 15px;
+    }
+
+    .hero{
+        padding-top:120px;
+    }
+
+    .hero h1{
+        font-size:55px;
+    }
+
+    .hero-dashboard{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .hero-stat{
+        border-bottom:1px solid #303a31;
+    }
+
     .resource-grid,
     .meters,
-    .cards,
+    .system-grid,
     .glossary,
-    .answers{grid-template-columns:1fr}
-    .hero-stat:nth-child(2){border-right:0}
-    .hero-stat{border-bottom:1px solid #30382f}
-    .country-top{align-items:flex-start}
+    .links-grid,
+    .answers{
+        grid-template-columns:1fr;
+    }
+
+    .country-layout{
+        grid-template-columns:1fr;
+    }
+
+    .country-header{
+        align-items:flex-start;
+    }
+
+    .country-header h3{
+        font-size:27px;
+    }
+
+    .timeline-year{
+        font-size:55px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =======================================================
+     NAVIGATION
+======================================================= -->
+
 <nav>
+
 <div class="nav">
 
-    <div class="brand">
-        HOI4 // WAR ROOM
+    <div class="logo">
+        HOI4 // COMMAND CENTER
         <small>UNOFFICIAL FAN ARCHIVE</small>
     </div>
 
-    <ul>
-        <li><a href="#command">Command</a></li>
-        <li><a href="#countries">Nations</a></li>
-        <li><a href="#focus">Focus Tree</a></li>
+    <ul class="nav-links">
+        <li><a href="#warroom">War Room</a></li>
+        <li><a href="#nations">Nations</a></li>
+        <li><a href="#focus">Focus</a></li>
         <li><a href="#systems">Systems</a></li>
         <li><a href="#history">History</a></li>
+        <li><a href="#links">Links</a></li>
         <li><a href="#quiz">Quiz</a></li>
     </ul>
 
+    <div class="nav-online">
+        <span class="online-dot"></span>
+        SYSTEM ONLINE
+    </div>
+
 </div>
+
 </nav>
 
+
+<!-- =======================================================
+     HERO
+======================================================= -->
 
 <header class="hero">
 
@@ -2132,9 +1334,8 @@ footer p{
 
 <div class="hero-content">
 
-    <div class="status">
-        <span class="status-dot"></span>
-        WAR ROOM ONLINE
+    <div class="hero-label">
+        ● GLOBAL COMMAND NETWORK // 1936
     </div>
 
     <h1>
@@ -2142,238 +1343,325 @@ footer p{
         <span>Iron IV</span>
     </h1>
 
-    <p class="hero-copy">
-        Enter the command room. Explore the nations, systems,
-        technology and history of one of the world's most detailed
-        World War II grand strategy games.
+    <p class="hero-description">
+        Welcome to the command center. Explore the nations,
+        military systems, technology, politics, alternate history
+        and strategy behind Hearts of Iron IV.
     </p>
 
     <div class="hero-buttons">
-        <a class="btn" href="#command">OPEN WAR ROOM</a>
-        <a class="btn red" href="#quiz">TAKE COMMANDER TEST</a>
+
+        <a href="#warroom" class="btn">
+            ENTER WAR ROOM
+        </a>
+
+        <a href="#nations" class="btn red">
+            CHOOSE A NATION
+        </a>
+
+        <a
+            href="https://www.paradoxinteractive.com/games/hearts-of-iron-iv/about"
+            target="_blank"
+            rel="noopener"
+            class="btn secondary"
+        >
+            OFFICIAL SITE ↗
+        </a>
+
     </div>
 
-    <div class="hero-stats">
-        <div class="hero-stat">
-            <b>1936</b>
-            <span>Campaign Start</span>
-        </div>
+    <div class="hero-dashboard">
 
         <div class="hero-stat">
-            <b>1945+</b>
-            <span>Possible End</span>
+            <b>1936</b>
+            <span>Campaign Era</span>
         </div>
 
         <div class="hero-stat">
             <b>GLOBAL</b>
-            <span>Theatre</span>
+            <span>Map</span>
         </div>
 
         <div class="hero-stat">
             <b>ALT-HIST</b>
             <span>Possibilities</span>
         </div>
+
+        <div class="hero-stat">
+            <b>32</b>
+            <span>MP Players</span>
+        </div>
+
+        <div class="hero-stat">
+            <b>∞</b>
+            <span>Strategies</span>
+        </div>
+
     </div>
 
 </div>
+
 </header>
 
 
-<!-- COMMAND DASHBOARD -->
+<!-- =======================================================
+     WAR ROOM
+======================================================= -->
 
-<section id="command">
+<section id="warroom">
 
-<div class="section-head">
+<div class="section-heading">
+
     <span class="kicker">01 // Command Center</span>
+
     <h2>War Room</h2>
-    <div class="line"></div>
+
+    <div class="gold-line"></div>
+
     <p>
-        A fictional HOI4-style command dashboard showing the
-        resources and information a player might monitor.
+        A fan-made interactive representation of the information
+        a commander might monitor during a campaign.
     </p>
+
 </div>
 
-<div class="dashboard">
 
-    <div class="panel">
+<div class="command-grid">
 
-        <div class="panel-title">
-            NATIONAL RESOURCES
-            <span>1936.01.01</span>
-        </div>
+<div class="panel">
 
-        <div class="panel-body">
+    <div class="panel-title">
+        NATIONAL RESOURCES
+        <span>01 JAN 1936</span>
+    </div>
 
-            <div class="resource-grid">
+    <div class="panel-body">
 
-                <div class="resource">
-                    <div class="icon">🏭</div>
-                    <b>42</b>
-                    <small>Factories</small>
-                    <div class="progress"><i style="width:72%"></i></div>
+        <div class="resource-grid">
+
+            <div class="resource">
+                <div class="resource-icon">🏭</div>
+                <strong>42</strong>
+                <small>Factories</small>
+                <div class="progress">
+                    <i style="width:78%"></i>
                 </div>
+            </div>
 
-                <div class="resource">
-                    <div class="icon">⚙️</div>
-                    <b>76%</b>
-                    <small>Production</small>
-                    <div class="progress"><i style="width:76%"></i></div>
+            <div class="resource">
+                <div class="resource-icon">⚙️</div>
+                <strong>76%</strong>
+                <small>Production</small>
+                <div class="progress">
+                    <i style="width:76%"></i>
                 </div>
+            </div>
 
-                <div class="resource">
-                    <div class="icon">🏛️</div>
-                    <b>87</b>
-                    <small>Political Power</small>
-                    <div class="progress"><i style="width:55%"></i></div>
+            <div class="resource">
+                <div class="resource-icon">🏛️</div>
+                <strong>87</strong>
+                <small>Political Power</small>
+                <div class="progress">
+                    <i style="width:58%"></i>
                 </div>
+            </div>
 
-                <div class="resource">
-                    <div class="icon">🌍</div>
-                    <b>12%</b>
-                    <small>World Tension</small>
-                    <div class="progress"><i style="width:12%"></i></div>
+            <div class="resource">
+                <div class="resource-icon">🌍</div>
+                <strong>12%</strong>
+                <small>World Tension</small>
+                <div class="progress">
+                    <i style="width:12%"></i>
                 </div>
-
             </div>
 
         </div>
 
     </div>
 
+</div>
 
-    <div class="panel">
 
-        <div class="panel-title">
-            INTELLIGENCE
-            <span>LIVE</span>
+<div class="panel">
+
+    <div class="panel-title">
+        INTELLIGENCE
+        <span>LIVE</span>
+    </div>
+
+    <div class="panel-body intel">
+
+        <div class="intel-item">
+            <strong>European Situation</strong>
+            <small>Political tensions continue to rise.</small>
         </div>
 
-        <div class="panel-body news">
+        <div class="intel-item">
+            <strong>Industrial Report</strong>
+            <small>New factories entering construction.</small>
+        </div>
 
-            <div class="news-item">
-                <b>International Situation</b>
-                <small>Europe remains tense.</small>
-            </div>
+        <div class="intel-item">
+            <strong>Military Report</strong>
+            <small>Army exercises underway.</small>
+        </div>
 
-            <div class="news-item">
-                <b>Industrial Report</b>
-                <small>Factory construction underway.</small>
-            </div>
-
-            <div class="news-item">
-                <b>Military Report</b>
-                <small>Army exercises continue.</small>
-            </div>
-
-            <div class="news-item">
-                <b>Research</b>
-                <small>Technology research progressing.</small>
-            </div>
-
+        <div class="intel-item">
+            <strong>Research</strong>
+            <small>New technologies under investigation.</small>
         </div>
 
     </div>
+
+</div>
+
+</div>
+
+
+<div class="ticker">
+
+<div class="ticker-track">
+
+    <div class="ticker-item">★ COMMAND NETWORK ONLINE</div>
+    <div class="ticker-item">★ INDUSTRIAL CAPACITY STABLE</div>
+    <div class="ticker-item">★ DIPLOMATIC CHANNELS OPEN</div>
+    <div class="ticker-item">★ RESEARCH TEAMS ACTIVE</div>
+    <div class="ticker-item">★ MILITARY EXERCISES UNDERWAY</div>
+
+    <div class="ticker-item">★ COMMAND NETWORK ONLINE</div>
+    <div class="ticker-item">★ INDUSTRIAL CAPACITY STABLE</div>
+    <div class="ticker-item">★ DIPLOMATIC CHANNELS OPEN</div>
+    <div class="ticker-item">★ RESEARCH TEAMS ACTIVE</div>
+    <div class="ticker-item">★ MILITARY EXERCISES UNDERWAY</div>
+
+</div>
 
 </div>
 
 </section>
 
 
-<!-- COUNTRIES -->
+<!-- =======================================================
+     NATIONS
+======================================================= -->
 
-<section id="countries">
+<section id="nations">
 
-<div class="section-head">
+<div class="section-heading">
+
     <span class="kicker">02 // World Powers</span>
-    <h2>Choose Your Nation</h2>
-    <div class="line"></div>
-    <p>Click a country to inspect its fictional intelligence profile.</p>
+
+    <h2>National Intelligence</h2>
+
+    <div class="gold-line"></div>
+
+    <p>
+        Select a major power to inspect its fictional
+        strategic profile.
+    </p>
+
 </div>
+
 
 <div class="country-layout">
 
-    <div class="country-list">
+<div class="country-buttons">
 
-        <button class="country-button active" onclick="country('Germany',this)">
-            🇩🇪 Germany
-        </button>
+    <button class="country-btn active"
+        onclick="selectCountry('Germany',this)">
+        🇩🇪 Germany
+    </button>
 
-        <button class="country-button" onclick="country('United Kingdom',this)">
-            🇬🇧 United Kingdom
-        </button>
+    <button class="country-btn"
+        onclick="selectCountry('United Kingdom',this)">
+        🇬🇧 United Kingdom
+    </button>
 
-        <button class="country-button" onclick="country('Soviet Union',this)">
-            ☭ Soviet Union
-        </button>
+    <button class="country-btn"
+        onclick="selectCountry('Soviet Union',this)">
+        ☭ Soviet Union
+    </button>
 
-        <button class="country-button" onclick="country('United States',this)">
-            🇺🇸 United States
-        </button>
+    <button class="country-btn"
+        onclick="selectCountry('United States',this)">
+        🇺🇸 United States
+    </button>
 
-        <button class="country-button" onclick="country('Japan',this)">
-            🇯🇵 Japan
-        </button>
+    <button class="country-btn"
+        onclick="selectCountry('Japan',this)">
+        🇯🇵 Japan
+    </button>
 
-        <button class="country-button" onclick="country('Italy',this)">
-            🇮🇹 Italy
-        </button>
+    <button class="country-btn"
+        onclick="selectCountry('Italy',this)">
+        🇮🇹 Italy
+    </button>
 
+</div>
+
+
+<div class="panel">
+
+    <div class="panel-title">
+        NATIONAL INTELLIGENCE FILE
+        <span id="countryDate">JAN 1936</span>
     </div>
 
+    <div class="panel-body">
 
-    <div class="panel country-main">
+        <div class="country-header">
 
-        <div class="panel-title">
-            NATIONAL INTELLIGENCE
-            <span id="countryDate">JAN 1936</span>
-        </div>
+            <div class="flag" id="countryFlag">🇩🇪</div>
 
-        <div class="panel-body">
+            <div>
+                <h3 id="countryName">Germany</h3>
 
-            <div class="country-top">
-
-                <div class="country-flag" id="countryFlag">🇩🇪</div>
-
-                <div>
-                    <h3 id="countryName">Germany</h3>
-                    <div class="sub" id="countryTag">
-                        Central European Power
-                    </div>
+                <div
+                    class="country-sub"
+                    id="countrySub">
+                    Central European Power
                 </div>
-
             </div>
 
-            <p id="countryDescription" style="color:#aeb3aa">
-                A major European industrial power with strong military
-                potential and a central position on the continent.
-            </p>
+        </div>
 
-            <div class="meters">
+        <p
+            class="country-description"
+            id="countryDescription"
+        >
+            A major European industrial power with strong
+            military potential and a central position on
+            the continent.
+        </p>
 
-                <div class="meter">
-                    <label>Industry</label>
-                    <strong id="industry">92</strong>
-                    <div class="progress">
-                        <i style="width:92%"></i>
-                    </div>
+
+        <div class="meters">
+
+            <div class="meter">
+                <label>Industry</label>
+                <strong id="industry">92</strong>
+
+                <div class="progress">
+                    <i id="industryBar" style="width:92%"></i>
                 </div>
+            </div>
 
-                <div class="meter">
-                    <label>Army</label>
-                    <strong id="army">88</strong>
-                    <div class="progress">
-                        <i style="width:88%"></i>
-                    </div>
+            <div class="meter">
+                <label>Army</label>
+                <strong id="army">88</strong>
+
+                <div class="progress">
+                    <i id="armyBar" style="width:88%"></i>
                 </div>
+            </div>
 
-                <div class="meter">
-                    <label>Navy</label>
-                    <strong id="navy">51</strong>
-                    <div class="progress">
-                        <i style="width:51%"></i>
-                    </div>
+            <div class="meter">
+                <label>Navy</label>
+                <strong id="navy">51</strong>
+
+                <div class="progress">
+                    <i id="navyBar" style="width:51%"></i>
                 </div>
-
             </div>
 
         </div>
@@ -2382,78 +1670,134 @@ footer p{
 
 </div>
 
+</div>
+
 </section>
 
 
-<!-- FOCUS TREE -->
+<!-- =======================================================
+     FOCUS TREE
+======================================================= -->
 
 <section id="focus">
 
-<div class="section-head">
+<div class="section-heading">
+
     <span class="kicker">03 // National Focus</span>
-    <h2>Focus Tree</h2>
-    <div class="line"></div>
+
+    <h2>Strategic Focus Tree</h2>
+
+    <div class="gold-line"></div>
+
     <p>
-        Click focus nodes to mark them completed and explore
-        a simplified fan-made focus tree.
+        Click a focus to mark it complete. This is a
+        fan-made interactive demonstration, not an exact
+        reproduction of an in-game focus tree.
     </p>
+
 </div>
 
-<div class="panel focus-tree">
 
-<div class="tree">
+<div class="panel focus-wrapper">
+
+<div class="focus-tree">
 
     <div class="focus-row">
 
-        <div class="focus" onclick="completeFocus(this)">
-            Rebuild the Nation
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Rebuild the Nation
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
     </div>
+
 
     <div class="focus-row">
 
         <div class="connector"></div>
 
-        <div class="focus" onclick="completeFocus(this)">
-            Industrial Expansion
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Industrial Expansion
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
         <div class="connector"></div>
 
-        <div class="focus" onclick="completeFocus(this)">
-            Military Reform
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Military Reform
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
     </div>
 
+
     <div class="focus-row">
 
-        <div class="focus" onclick="completeFocus(this)">
-            Expand Research
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Research Expansion
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
-        <div class="focus" onclick="completeFocus(this)">
-            Modernize Army
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Modernize Army
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
-        <div class="focus" onclick="completeFocus(this)">
-            Strategic Industry
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                Strategic Industry
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
     </div>
 
+
     <div class="focus-row">
 
-        <div class="focus" onclick="completeFocus(this)">
-            National Ambition
-            <small>70 days</small>
+        <div
+            class="focus"
+            onclick="completeFocus(this)"
+        >
+            <div class="focus-title">
+                National Ambition
+            </div>
+
+            <small>70 DAYS</small>
         </div>
 
     </div>
@@ -2465,130 +1809,224 @@ footer p{
 </section>
 
 
-<!-- SYSTEMS -->
+<!-- =======================================================
+     GAME SYSTEMS
+======================================================= -->
 
 <section id="systems">
 
-<div class="section-head">
-    <span class="kicker">04 // Game Systems</span>
-    <h2>The Machine</h2>
-    <div class="line"></div>
+<div class="section-heading">
+
+    <span class="kicker">04 // The Machine</span>
+
+    <h2>Game Systems</h2>
+
+    <div class="gold-line"></div>
+
     <p>
-        HOI4 combines military strategy, economics, politics,
-        logistics and technology into one giant system.
+        The major systems that make HOI4 a grand strategy game.
     </p>
+
 </div>
 
-<div class="cards">
 
-    <div class="card">
-        <div class="card-icon">⚔️</div>
-        <h3>Land Warfare</h3>
-        <p>
-            Command divisions, organize armies, establish front lines,
-            create battle plans and manage breakthroughs.
-        </p>
-        <button class="learn" onclick="learn('Land Warfare')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+<div class="system-grid">
 
-    <div class="card">
-        <div class="card-icon">🏭</div>
-        <h3>Industry</h3>
-        <p>
-            Manage factories, equipment production, construction,
-            resources and the industrial foundation of your nation.
-        </p>
-        <button class="learn" onclick="learn('Industry')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+<div class="system">
 
-    <div class="card">
-        <div class="card-icon">🔬</div>
-        <h3>Technology</h3>
-        <p>
-            Research technologies across industry, electronics,
-            weapons, armor, aircraft and military doctrines.
-        </p>
-        <button class="learn" onclick="learn('Technology')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+    <span class="system-number">01</span>
 
-    <div class="card">
-        <div class="card-icon">✈️</div>
-        <h3>Air Force</h3>
-        <p>
-            Design aircraft, organize air wings and fight for
-            control of important air regions.
-        </p>
-        <button class="learn" onclick="learn('Air Force')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+    <div class="system-icon">⚔️</div>
 
-    <div class="card">
-        <div class="card-icon">⚓</div>
-        <h3>Navy</h3>
-        <p>
-            Build fleets, escort convoys, conduct naval invasions
-            and fight for control of the world's oceans.
-        </p>
-        <button class="learn" onclick="learn('Navy')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+    <h3>Land Warfare</h3>
 
-    <div class="card">
-        <div class="card-icon">🏛️</div>
-        <h3>Politics</h3>
-        <p>
-            Political power, national focuses, laws, advisors,
-            diplomacy and decisions can change your nation's future.
-        </p>
-        <button class="learn" onclick="learn('Politics')">
-            READ INTELLIGENCE →
-        </button>
-    </div>
+    <p>
+        Organize armies, design divisions, establish front
+        lines and execute battle plans.
+    </p>
+
+    <button onclick="showInfo(
+        'LAND WARFARE',
+        'Land warfare involves divisions, commanders, front lines, battle plans, terrain, organization, equipment and logistics.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
+
+
+<div class="system">
+
+    <span class="system-number">02</span>
+
+    <div class="system-icon">🏭</div>
+
+    <h3>Industry</h3>
+
+    <p>
+        Build factories, produce equipment and create
+        the industrial foundation of your nation.
+    </p>
+
+    <button onclick="showInfo(
+        'INDUSTRY',
+        'Industry is central to HOI4. Factories construct buildings and produce the equipment required by your armed forces.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
+
+
+<div class="system">
+
+    <span class="system-number">03</span>
+
+    <div class="system-icon">🔬</div>
+
+    <h3>Research</h3>
+
+    <p>
+        Research technologies covering industry, electronics,
+        weapons, aircraft, armor and military doctrines.
+    </p>
+
+    <button onclick="showInfo(
+        'RESEARCH',
+        'Research allows countries to unlock improved technology and military capabilities.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
+
+
+<div class="system">
+
+    <span class="system-number">04</span>
+
+    <div class="system-icon">✈️</div>
+
+    <h3>Air Power</h3>
+
+    <p>
+        Build aircraft, organize air wings and fight for
+        control of the skies.
+    </p>
+
+    <button onclick="showInfo(
+        'AIR POWER',
+        'Air forces can perform missions such as air superiority, interception, bombing and close air support.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
+
+
+<div class="system">
+
+    <span class="system-number">05</span>
+
+    <div class="system-icon">⚓</div>
+
+    <h3>Naval Warfare</h3>
+
+    <p>
+        Design fleets, protect convoys, conduct invasions
+        and contest strategic sea zones.
+    </p>
+
+    <button onclick="showInfo(
+        'NAVAL WARFARE',
+        'Navies can protect shipping, raid enemy convoys, support invasions and fight for control of the oceans.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
+
+
+<div class="system">
+
+    <span class="system-number">06</span>
+
+    <div class="system-icon">🏛️</div>
+
+    <h3>Politics</h3>
+
+    <p>
+        Political power, focuses, laws, advisors and
+        diplomacy can dramatically change a campaign.
+    </p>
+
+    <button onclick="showInfo(
+        'POLITICS',
+        'Political systems shape national direction through political power, laws, advisors, decisions, diplomacy and focuses.'
+    )">
+        OPEN FILE →
+    </button>
+
+</div>
 
 </div>
 
 </section>
 
 
-<!-- HISTORY -->
+<!-- =======================================================
+     HISTORY
+======================================================= -->
 
 <section id="history">
 
-<div class="section-head">
+<div class="section-heading">
+
     <span class="kicker">05 // Historical Archive</span>
+
     <h2>The Road to War</h2>
-    <div class="line"></div>
-    <p>Drag the timeline to explore major events of the era.</p>
+
+    <div class="gold-line"></div>
+
+    <p>
+        Drag the timeline through the era represented by
+        Hearts of Iron IV.
+    </p>
+
 </div>
 
-<div class="timeline-wrap">
 
-    <div class="timeline-year" id="timelineYear">1936</div>
+<div class="timeline-box">
 
-    <p class="timeline-description" id="timelineDescription">
-        The world is tense. Nations industrialize, rearm and
-        make political decisions that will shape the coming conflict.
+    <div
+        class="timeline-year"
+        id="timelineYear">
+        1936
+    </div>
+
+    <div
+        class="timeline-title"
+        id="timelineTitle">
+        A World Preparing
+    </div>
+
+    <p
+        class="timeline-description"
+        id="timelineDescription">
+        Nations industrialize, rearm and pursue political
+        objectives while international tensions rise.
     </p>
 
     <input
-        id="timeline"
         type="range"
+        id="timelineSlider"
         min="1936"
         max="1945"
         value="1936"
-        step="1"
         oninput="updateTimeline()"
     >
 
-    <div class="year-labels">
+    <div class="timeline-labels">
         <span>1936</span>
         <span>1939</span>
         <span>1941</span>
@@ -2601,74 +2039,118 @@ footer p{
 </section>
 
 
-<!-- GLOSSARY -->
+<!-- =======================================================
+     GLOSSARY
+======================================================= -->
 
-<section>
+<section id="glossary-section">
 
-<div class="section-head">
+<div class="section-heading">
+
     <span class="kicker">06 // Intelligence Database</span>
+
     <h2>HOI4 Glossary</h2>
-    <div class="line"></div>
-    <p>Search the database for common HOI4 terminology.</p>
+
+    <div class="gold-line"></div>
+
+    <p>
+        Search common terminology used by HOI4 players.
+    </p>
+
 </div>
 
-<input
-    class="search"
-    id="search"
-    placeholder="Search: division, supply, focus..."
-    oninput="searchTerms()"
->
+
+<div class="search-box">
+
+    <input
+        id="glossarySearch"
+        type="text"
+        placeholder="Search: division, supply, focus..."
+        oninput="searchGlossary()"
+    >
+
+</div>
+
 
 <div class="glossary" id="glossary">
 
     <div class="term">
         <b>Division</b>
-        <p>A military formation made from battalions and support companies.</p>
+        <p>
+            A military formation made from battalions
+            and support companies.
+        </p>
     </div>
 
     <div class="term">
         <b>National Focus</b>
-        <p>A country-specific objective represented in a focus tree.</p>
+        <p>
+            A country-specific objective represented
+            through a focus tree.
+        </p>
     </div>
 
     <div class="term">
         <b>Political Power</b>
-        <p>A resource used for many governmental and political actions.</p>
+        <p>
+            A resource used for many political and
+            governmental actions.
+        </p>
     </div>
 
     <div class="term">
         <b>Battle Plan</b>
-        <p>A planned operation assigned to an army or army group.</p>
+        <p>
+            A planned military operation assigned to
+            an army.
+        </p>
     </div>
 
     <div class="term">
         <b>Supply</b>
-        <p>The logistical network that keeps military forces operating.</p>
+        <p>
+            The logistical network needed to keep
+            armies operating.
+        </p>
     </div>
 
     <div class="term">
         <b>World Tension</b>
-        <p>A measure of global instability and international conflict.</p>
+        <p>
+            A measure of global instability and
+            international conflict.
+        </p>
     </div>
 
     <div class="term">
         <b>Convoy</b>
-        <p>Ships used to transport supplies, resources and troops.</p>
+        <p>
+            Ships used to transport resources,
+            supplies and troops.
+        </p>
     </div>
 
     <div class="term">
         <b>Division Template</b>
-        <p>The organization and composition of a division.</p>
+        <p>
+            The organization and composition of a
+            division.
+        </p>
     </div>
 
     <div class="term">
         <b>Air Superiority</b>
-        <p>Control of the skies over an air region.</p>
+        <p>
+            Control of the skies over an air region.
+        </p>
     </div>
 
     <div class="term">
         <b>War Support</b>
-        <p>A measure of how willing a population is to support war.</p>
+        <p>
+            A measure of support for a nation's
+            war effort.
+        </p>
     </div>
 
 </div>
@@ -2676,32 +2158,167 @@ footer p{
 </section>
 
 
-<!-- QUIZ -->
+<!-- =======================================================
+     LINKS
+======================================================= -->
+
+<section id="links">
+
+<div class="section-heading">
+
+    <span class="kicker">07 // External Intelligence</span>
+
+    <h2>HOI4 Resources</h2>
+
+    <div class="gold-line"></div>
+
+    <p>
+        Useful places to continue exploring Hearts of Iron IV.
+    </p>
+
+</div>
+
+
+<div class="links-grid">
+
+    <a
+        class="link-card"
+        href="https://www.paradoxinteractive.com/games/hearts-of-iron-iv/about"
+        target="_blank"
+        rel="noopener"
+    >
+
+        <div class="link-icon">🏛️</div>
+
+        <h3>Official Website</h3>
+
+        <p>
+            The official Hearts of Iron IV page from
+            Paradox Interactive.
+        </p>
+
+        <span>VISIT PARADOX ↗</span>
+
+    </a>
+
+
+    <a
+        class="link-card"
+        href="https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/"
+        target="_blank"
+        rel="noopener"
+    >
+
+        <div class="link-icon">🎮</div>
+
+        <h3>Steam</h3>
+
+        <p>
+            Visit the official Steam page for Hearts
+            of Iron IV.
+        </p>
+
+        <span>OPEN STEAM ↗</span>
+
+    </a>
+
+
+    <a
+        class="link-card"
+        href="https://hoi4.paradoxwikis.com/"
+        target="_blank"
+        rel="noopener"
+    >
+
+        <div class="link-icon">📚</div>
+
+        <h3>Community Wiki</h3>
+
+        <p>
+            Explore detailed information about mechanics,
+            countries, technologies and more.
+        </p>
+
+        <span>OPEN WIKI ↗</span>
+
+    </a>
+
+
+    <a
+        class="link-card"
+        href="https://steamcommunity.com/app/394360/workshop/"
+        target="_blank"
+        rel="noopener"
+    >
+
+        <div class="link-icon">🛠️</div>
+
+        <h3>Steam Workshop</h3>
+
+        <p>
+            Explore community-created HOI4 modifications
+            and other Workshop content.
+        </p>
+
+        <span>OPEN WORKSHOP ↗</span>
+
+    </a>
+
+</div>
+
+</section>
+
+
+<!-- =======================================================
+     QUIZ
+======================================================= -->
 
 <section id="quiz">
 
-<div class="section-head">
-    <span class="kicker">07 // Officer Examination</span>
+<div class="section-heading">
+
+    <span class="kicker">08 // Officer Examination</span>
+
     <h2>Commander Test</h2>
-    <div class="line"></div>
-    <p>Five questions. One commander. No excuses.</p>
+
+    <div class="gold-line"></div>
+
+    <p>
+        Five questions. Test your knowledge of Hearts of Iron IV.
+    </p>
+
 </div>
+
 
 <div class="quiz">
 
 <div class="quiz-box">
 
-    <div class="question" id="question"></div>
+    <div class="quiz-progress">
+        <i id="quizProgress"></i>
+    </div>
 
-    <div class="answers" id="answers"></div>
+    <div
+        class="question"
+        id="question">
+    </div>
 
-    <div class="quiz-score" id="quizScore"></div>
+    <div
+        class="answers"
+        id="answers">
+    </div>
+
+    <div
+        class="quiz-result"
+        id="quizResult">
+    </div>
 
     <button
         class="btn"
-        id="next"
+        id="nextButton"
         style="display:none;margin-top:20px"
-        onclick="nextQuestion()">
+        onclick="nextQuestion()"
+    >
         NEXT QUESTION
     </button>
 
@@ -2712,30 +2329,76 @@ footer p{
 </section>
 
 
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
 <footer>
 
-<strong>HOI4 // WAR ROOM</strong>
+<strong>HOI4 // COMMAND CENTER</strong>
 
-<p>
-    An unofficial fan-made project created for educational and
-    entertainment purposes. Hearts of Iron IV and related
-    trademarks belong to their respective owners.
+<div class="footer-links">
+
+    <a
+        href="https://www.paradoxinteractive.com/games/hearts-of-iron-iv/about"
+        target="_blank"
+        rel="noopener">
+        Official Paradox
+    </a>
+
+    <a
+        href="https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/"
+        target="_blank"
+        rel="noopener">
+        Steam
+    </a>
+
+    <a
+        href="https://hoi4.paradoxwikis.com/"
+        target="_blank"
+        rel="noopener">
+        Wiki
+    </a>
+
+    <a
+        href="https://steamcommunity.com/app/394360/workshop/"
+        target="_blank"
+        rel="noopener">
+        Workshop
+    </a>
+
+</div>
+
+<p class="disclaimer">
+    This is an unofficial fan-made website created for
+    educational and entertainment purposes. Hearts of Iron IV
+    and related trademarks belong to their respective owners.
 </p>
 
-<p>
+<p class="disclaimer">
     Not affiliated with or endorsed by Paradox Interactive.
 </p>
 
 </footer>
 
 
-<!-- MODAL -->
+<!-- =======================================================
+     MODAL
+======================================================= -->
 
-<div class="modal" id="modal" onclick="closeModal(event)">
+<div
+    class="modal"
+    id="modal"
+    onclick="closeModal(event)"
+>
 
 <div class="modal-box">
 
-    <span class="close" onclick="hideModal()">×</span>
+    <span
+        class="close"
+        onclick="hideModal()">
+        ×
+    </span>
 
     <h2 id="modalTitle"></h2>
 
@@ -2748,237 +2411,149 @@ footer p{
 
 <script>
 
-/* -----------------------------
+/* =========================================================
    COUNTRY DATABASE
------------------------------ */
+========================================================= */
 
-const countries={
+const countries = {
 
-Germany:{
-    flag:"🇩🇪",
-    tag:"Central European Power",
-    industry:92,
-    army:88,
-    navy:51,
-    description:
-    "A major European industrial power with strong military potential and a central position on the continent."
-},
+    "Germany":{
+        flag:"🇩🇪",
+        sub:"Central European Power",
+        industry:92,
+        army:88,
+        navy:51,
+        description:
+        "A major European industrial power with a central geographic position and strong military potential."
+    },
 
-"United Kingdom":{
-    flag:"🇬🇧",
-    tag:"Global Maritime Power",
-    industry:84,
-    army:68,
-    navy:96,
-    description:
-    "A global power with a huge overseas empire and one of the world's most important navies."
-},
+    "United Kingdom":{
+        flag:"🇬🇧",
+        sub:"Global Maritime Power",
+        industry:84,
+        army:68,
+        navy:96,
+        description:
+        "A global power with a large overseas empire and a major navy capable of operating across the world."
+    },
 
-"Soviet Union":{
-    flag:"☭",
-    tag:"Continental Giant",
-    industry:81,
-    army:75,
-    navy:38,
-    description:
-    "A massive continental state with enormous manpower, territory and long-term industrial potential."
-},
+    "Soviet Union":{
+        flag:"☭",
+        sub:"Continental Giant",
+        industry:81,
+        army:75,
+        navy:38,
+        description:
+        "A huge continental state with enormous territory, manpower and long-term industrial potential."
+    },
 
-"United States":{
-    flag:"🇺🇸",
-    tag:"Industrial Superpower",
-    industry:98,
-    army:42,
-    navy:91,
-    description:
-    "An enormous industrial power whose geographic position gives it time to mobilize its economic potential."
-},
+    "United States":{
+        flag:"🇺🇸",
+        sub:"Industrial Superpower",
+        industry:98,
+        army:42,
+        navy:91,
+        description:
+        "An industrial giant with enormous economic potential and a strategic position separated from Europe by the Atlantic."
+    },
 
-Japan:{
-    flag:"🇯🇵",
-    tag:"Pacific Empire",
-    industry:69,
-    army:79,
-    navy:94,
-    description:
-    "An island empire with major naval ambitions and strategic interests throughout East Asia and the Pacific."
-},
+    "Japan":{
+        flag:"🇯🇵",
+        sub:"Pacific Empire",
+        industry:69,
+        army:79,
+        navy:94,
+        description:
+        "An island empire whose strategy involves naval power, air power and operations throughout East Asia and the Pacific."
+    },
 
-Italy:{
-    flag:"🇮🇹",
-    tag:"Mediterranean Power",
-    industry:61,
-    army:67,
-    navy:72,
-    description:
-    "A Mediterranean power whose strategic position creates opportunities across Europe, Africa and the surrounding seas."
-}
+    "Italy":{
+        flag:"🇮🇹",
+        sub:"Mediterranean Power",
+        industry:61,
+        army:67,
+        navy:72,
+        description:
+        "A Mediterranean power with strategic interests in Europe, North Africa and the surrounding seas."
+    }
 
 };
 
-function country(name,button){
 
-    const c=countries[name];
+function selectCountry(name,button){
 
-    document.querySelectorAll(".country-button")
-        .forEach(x=>x.classList.remove("active"));
+    const c = countries[name];
+
+    document
+        .querySelectorAll(".country-btn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
 
     button.classList.add("active");
 
-    document.getElementById("countryFlag").textContent=c.flag;
-    document.getElementById("countryName").textContent=name;
-    document.getElementById("countryTag").textContent=c.tag;
-    document.getElementById("countryDescription").textContent=c.description;
+    document.getElementById("countryFlag")
+        .textContent=c.flag;
 
-    document.getElementById("industry").textContent=c.industry;
-    document.getElementById("army").textContent=c.army;
-    document.getElementById("navy").textContent=c.navy;
+    document.getElementById("countryName")
+        .textContent=name;
 
-    document.querySelectorAll(".meter .progress i")[0]
+    document.getElementById("countrySub")
+        .textContent=c.sub;
+
+    document.getElementById("countryDescription")
+        .textContent=c.description;
+
+    document.getElementById("industry")
+        .textContent=c.industry;
+
+    document.getElementById("army")
+        .textContent=c.army;
+
+    document.getElementById("navy")
+        .textContent=c.navy;
+
+    document.getElementById("industryBar")
         .style.width=c.industry+"%";
 
-    document.querySelectorAll(".meter .progress i")[1]
+    document.getElementById("armyBar")
         .style.width=c.army+"%";
 
-    document.querySelectorAll(".meter .progress i")[2]
+    document.getElementById("navyBar")
         .style.width=c.navy+"%";
 }
 
 
-/* -----------------------------
+/* =========================================================
    FOCUS TREE
------------------------------ */
+========================================================= */
 
 function completeFocus(element){
 
-    element.classList.toggle("completed");
+    element.classList.toggle("done");
 
-    if(element.classList.contains("completed")){
-        element.dataset.old=element.innerHTML;
+    const title =
+        element.querySelector(".focus-title");
 
-        element.innerHTML=
-        "✓ "+element.textContent.trim();
+    if(element.classList.contains("done")){
+
+        title.textContent =
+            "✓ "+title.textContent.replace(/^✓ /,"");
+
     }else{
-        element.innerHTML=
-        element.dataset.old || element.innerHTML;
+
+        title.textContent =
+            title.textContent.replace(/^✓ /,"");
+
     }
 }
 
 
-/* -----------------------------
-   SYSTEM MODALS
------------------------------ */
+/* =========================================================
+   INFORMATION MODALS
+========================================================= */
 
-const intelligence={
-
-"Land Warfare":
-"Land warfare revolves around divisions, commanders, front lines, battle plans, terrain, combat width, organization, equipment and logistics.",
-
-"Industry":
-"Industry is the economic foundation of a country. Factories construct buildings and produce equipment while resources affect production.",
-
-"Technology":
-"Research allows nations to develop better equipment, industry, electronics and military doctrines.",
-
-"Air Force":
-"Air forces can contest air regions, support armies, intercept enemy aircraft and conduct bombing operations.",
-
-"Navy":
-"Naval forces protect convoys, attack enemy shipping, support invasions and contest strategic sea zones.",
-
-"Politics":
-"Political systems influence national focuses, laws, advisors, decisions, diplomacy and the overall direction of a country."
-
-};
-
-function learn(topic){
-
-    showModal(
-        topic,
-        intelligence[topic]
-    );
-}
-
-
-/* -----------------------------
-   TIMELINE
------------------------------ */
-
-const timelineData={
-
-1936:
-"The game commonly begins in 1936. Nations industrialize, research technologies, reorganize their armed forces and pursue political objectives.",
-
-1937:
-"Political tensions continue to rise while countries prepare their economies and militaries for possible conflict.",
-
-1938:
-"International crises and territorial disputes increase the pressure on the European political system.",
-
-1939:
-"Germany invades Poland. Britain and France enter the war against Germany.",
-
-1940:
-"Germany launches major campaigns in Western Europe. France falls and Britain faces the threat of invasion.",
-
-1941:
-"Germany invades the Soviet Union. Japan attacks Pearl Harbor, bringing the United States directly into the war.",
-
-1942:
-"The war becomes a truly global conflict with major campaigns across Europe, Africa and the Pacific.",
-
-1943:
-"The strategic balance increasingly shifts toward the Allies as Axis forces face growing pressure.",
-
-1944:
-"The Allies land in Normandy while Soviet forces continue advancing from the east.",
-
-1945:
-"Germany surrenders in May. Japan surrenders later in the year, bringing the Second World War to an end."
-};
-
-function updateTimeline(){
-
-    const year=document.getElementById("timeline").value;
-
-    document.getElementById("timelineYear")
-        .textContent=year;
-
-    document.getElementById("timelineDescription")
-        .textContent=timelineData[year];
-}
-
-
-/* -----------------------------
-   SEARCH
------------------------------ */
-
-function searchTerms(){
-
-    const query=document
-        .getElementById("search")
-        .value
-        .toLowerCase();
-
-    document
-        .querySelectorAll(".term")
-        .forEach(term=>{
-
-            term.style.display=
-            term.textContent
-            .toLowerCase()
-            .includes(query)
-            ?"block":"none";
-
-        });
-}
-
-
-/* -----------------------------
-   MODAL
------------------------------ */
-
-function showModal(title,text){
+function showInfo(title,text){
 
     document.getElementById("modalTitle")
         .textContent=title;
@@ -3003,115 +2578,231 @@ function closeModal(event){
     }
 }
 
-document.addEventListener("keydown",e=>{
+document.addEventListener("keydown",event=>{
 
-    if(e.key==="Escape"){
+    if(event.key==="Escape"){
         hideModal();
     }
 
 });
 
 
-/* -----------------------------
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+const timelineData={
+
+1936:{
+    title:"A World Preparing",
+    text:"Nations industrialize, research technologies, reorganize armed forces and pursue political objectives while international tensions rise."
+},
+
+1937:{
+    title:"Tensions Increase",
+    text:"International crises continue while nations expand their military and industrial preparations."
+},
+
+1938:{
+    title:"The International Order Shifts",
+    text:"Political and territorial crises put increasing pressure on the European balance of power."
+},
+
+1939:{
+    title:"The War Begins",
+    text:"Germany invades Poland. Britain and France enter the war against Germany."
+},
+
+1940:{
+    title:"Western Europe Falls",
+    text:"Germany launches major campaigns in Western Europe. France falls while Britain continues the war."
+},
+
+1941:{
+    title:"The War Goes Global",
+    text:"Germany invades the Soviet Union. Japan attacks Pearl Harbor, bringing the United States directly into the conflict."
+},
+
+1942:{
+    title:"Global Conflict",
+    text:"The war expands across Europe, North Africa and the Pacific as the major powers mobilize enormous resources."
+},
+
+1943:{
+    title:"The Balance Shifts",
+    text:"Axis forces face increasing pressure as Allied military and industrial strength grows."
+},
+
+1944:{
+    title:"The Allies Advance",
+    text:"The Allies land in Normandy while Soviet forces continue advancing from the east."
+},
+
+1945:{
+    title:"The War Ends",
+    text:"Germany surrenders in May. Japan surrenders later in the year, ending the Second World War."
+}
+
+};
+
+
+function updateTimeline(){
+
+    const year =
+        document.getElementById("timelineSlider").value;
+
+    const data =
+        timelineData[year];
+
+    document.getElementById("timelineYear")
+        .textContent=year;
+
+    document.getElementById("timelineTitle")
+        .textContent=data.title;
+
+    document.getElementById("timelineDescription")
+        .textContent=data.text;
+}
+
+
+/* =========================================================
+   GLOSSARY SEARCH
+========================================================= */
+
+function searchGlossary(){
+
+    const query =
+        document.getElementById("glossarySearch")
+        .value
+        .toLowerCase();
+
+    document
+        .querySelectorAll(".term")
+        .forEach(term=>{
+
+            const text =
+                term.textContent.toLowerCase();
+
+            term.style.display =
+                text.includes(query)
+                ? "block"
+                : "none";
+
+        });
+}
+
+
+/* =========================================================
    QUIZ
------------------------------ */
+========================================================= */
 
 const questions=[
 
 {
-q:"What type of game is Hearts of Iron IV?",
-a:[
-"Grand strategy",
-"First-person shooter",
-"Racing game",
-"Puzzle game"
-],
-correct:0
+    q:"What type of game is Hearts of Iron IV?",
+    a:[
+        "Grand strategy",
+        "First-person shooter",
+        "Racing game",
+        "Puzzle game"
+    ],
+    correct:0
 },
 
 {
-q:"Which resource is used for many political actions?",
-a:[
-"Political Power",
-"Gold",
-"Mana",
-"Coins"
-],
-correct:0
+    q:"Which resource is used for many political actions?",
+    a:[
+        "Political Power",
+        "Gold",
+        "Mana",
+        "Coins"
+    ],
+    correct:0
 },
 
 {
-q:"What can a division template determine?",
-a:[
-"The composition of a division",
-"The weather",
-"The game resolution",
-"The music"
-],
-correct:0
+    q:"What can a division template determine?",
+    a:[
+        "The composition of a division",
+        "The weather",
+        "The screen resolution",
+        "The music"
+    ],
+    correct:0
 },
 
 {
-q:"What year is a common HOI4 campaign starting point?",
-a:[
-"1936",
-"1914",
-"1950",
-"2000"
-],
-correct:0
+    q:"Which year is a common campaign start?",
+    a:[
+        "1936",
+        "1914",
+        "1950",
+        "2000"
+    ],
+    correct:0
 },
 
 {
-q:"What does a national focus generally represent?",
-a:[
-"A country-specific objective",
-"A graphics setting",
-"A multiplayer rank",
-"A save file"
-],
-correct:0
+    q:"What does a national focus generally represent?",
+    a:[
+        "A country-specific objective",
+        "A graphics setting",
+        "A multiplayer rank",
+        "A save file"
+    ],
+    correct:0
 }
 
 ];
 
-let qIndex=0;
+let currentQuestion=0;
 let score=0;
 let answered=false;
+
 
 function loadQuestion(){
 
     answered=false;
 
-    const q=questions[qIndex];
+    const q=
+        questions[currentQuestion];
 
     document.getElementById("question")
         .textContent=q.q;
 
-    const container=document
-        .getElementById("answers");
+    const answers=
+        document.getElementById("answers");
 
-    container.innerHTML="";
+    answers.innerHTML="";
 
     q.a.forEach((answer,index)=>{
 
-        const button=document.createElement("button");
+        const button=
+            document.createElement("button");
 
         button.className="answer";
+
         button.textContent=answer;
 
-        button.onclick=()=>answerQuestion(button,index);
+        button.onclick=()=>{
+            answerQuestion(button,index);
+        };
 
-        container.appendChild(button);
+        answers.appendChild(button);
 
     });
 
-    document.getElementById("quizScore")
+    document.getElementById("quizResult")
         .textContent="";
 
-    document.getElementById("next")
+    document.getElementById("nextButton")
         .style.display="none";
+
+    document.getElementById("quizProgress")
+        .style.width=
+        ((currentQuestion)/questions.length*100)+"%";
 }
+
 
 function answerQuestion(button,index){
 
@@ -3119,12 +2810,15 @@ function answerQuestion(button,index){
 
     answered=true;
 
-    const q=questions[qIndex];
+    const q=
+        questions[currentQuestion];
 
     const buttons=
         document.querySelectorAll(".answer");
 
-    buttons.forEach(b=>b.disabled=true);
+    buttons.forEach(btn=>{
+        btn.disabled=true;
+    });
 
     if(index===q.correct){
 
@@ -3132,8 +2826,9 @@ function answerQuestion(button,index){
 
         score++;
 
-        document.getElementById("quizScore")
-            .textContent="✓ Correct. Good work, commander.";
+        document.getElementById("quizResult")
+            .textContent=
+            "✓ CORRECT — Good work, commander.";
 
     }else{
 
@@ -3142,48 +2837,60 @@ function answerQuestion(button,index){
         buttons[q.correct]
             .classList.add("correct");
 
-        document.getElementById("quizScore")
-            .textContent="✕ Incorrect. The correct answer is highlighted.";
+        document.getElementById("quizResult")
+            .textContent=
+            "✕ INCORRECT — The correct answer is highlighted.";
 
     }
 
-    document.getElementById("next")
-        .style.display="inline-block";
+    document.getElementById("nextButton")
+        .style.display="inline-flex";
 }
+
 
 function nextQuestion(){
 
-    qIndex++;
+    currentQuestion++;
 
-    if(qIndex>=questions.length){
+    if(currentQuestion>=questions.length){
 
         document.getElementById("question")
-            .textContent="EXAM COMPLETE";
+            .textContent=
+            "COMMANDER EXAM COMPLETE";
 
         document.getElementById("answers")
             .innerHTML="";
 
-        let message="";
+        let message;
 
         if(score===5){
-            message="PERFECT SCORE — FIELD MARSHAL";
-        }else if(score>=3){
-            message="PASS — EXPERIENCED COMMANDER";
-        }else{
-            message="TRAINING REQUIRED — RETURN TO THE ARCHIVES";
+            message=
+            "PERFECT SCORE — FIELD MARSHAL";
+        }
+        else if(score>=3){
+            message=
+            "PASS — EXPERIENCED COMMANDER";
+        }
+        else{
+            message=
+            "TRAINING REQUIRED — RETURN TO THE ARCHIVES";
         }
 
-        document.getElementById("quizScore")
+        document.getElementById("quizResult")
             .innerHTML=
             "<strong>"+message+
-            "</strong><br><br>Score: "+
+            "</strong><br><br>FINAL SCORE: "+
             score+" / "+questions.length;
 
-        const next=document.getElementById("next");
+        const button=
+            document.getElementById("nextButton");
 
-        next.textContent="RETAKE EXAM";
+        button.textContent="RETAKE EXAM";
 
-        next.onclick=restartQuiz;
+        button.onclick=restartQuiz;
+
+        document.getElementById("quizProgress")
+            .style.width="100%";
 
         return;
     }
@@ -3191,18 +2898,24 @@ function nextQuestion(){
     loadQuestion();
 }
 
+
 function restartQuiz(){
 
-    qIndex=0;
+    currentQuestion=0;
     score=0;
 
-    const next=document.getElementById("next");
+    const button=
+        document.getElementById("nextButton");
 
-    next.textContent="NEXT QUESTION";
-    next.onclick=nextQuestion;
+    button.textContent="NEXT QUESTION";
+
+    button.onclick=nextQuestion;
 
     loadQuestion();
 }
+
+
+/* Start the quiz */
 
 loadQuestion();
 
